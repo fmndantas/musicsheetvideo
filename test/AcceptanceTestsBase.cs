@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ public abstract class AcceptanceTestsBase
         await _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
-        AssertSlideshowWasCorrectlyProduced();
+        await AssertSlideshowWasCorrectlyProduced();
     }
 
     private void RemoveGeneratedFiles()
@@ -68,14 +69,19 @@ public abstract class AcceptanceTestsBase
         AnalyseInputFile(lines);
     }
 
-    private void AssertSlideshowWasCorrectlyProduced()
+    private async Task AssertSlideshowWasCorrectlyProduced()
     {
         var output = Directory.GetFiles(_configuration.BasePath, "*.mp4", 
             SearchOption.TopDirectoryOnly);
         Assert.AreEqual(1, output.Length);
         Assert.AreEqual(_configuration.VideoPath, output.First());
-        // ToDo: confirm video length
+        await AssertSlideshowDurationIsCoerent();
         // ToDo: confirm video has no audio
+    }
+
+    private async Task AssertSlideshowDurationIsCoerent()
+    {
+        throw new NotImplementedException();
     }
 
     protected abstract IEnumerable<string> FileNames();

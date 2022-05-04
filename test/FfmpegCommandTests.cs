@@ -26,10 +26,10 @@ public class FfmpegCommandTests
             "0", "-i", _configuration.InputPath, "-vf", "\"crop=trunc(iw/2)*2:trunc(ih/2)*2\"",
             "-vsync", "vfr", "-pix_fmt", "yuv420p", _configuration.VideoPath
         };
-        AssertFragmentsAreEqualTo($"{_command.Command} {_command.Arguments}", target);
+        AssertCommandsAreEqual(_command.Command, target);
     }
 
-    private void AssertFragmentsAreEqualTo(string command, List<string> target)
+    private void AssertCommandsAreEqual(string command, List<string> target)
     {
         Assert.AreEqual(string.Join(" ", target), command);
     }
