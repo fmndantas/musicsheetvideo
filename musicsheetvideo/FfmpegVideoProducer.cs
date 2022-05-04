@@ -1,23 +1,23 @@
 namespace musicsheetvideo;
 
-public class FfmpegProducer : IVideoProducer
+public class FfmpegVideoProducer : IVideoProducer
 {
     private readonly MusicSheetVideoConfiguration _configuration;
 
-    public FfmpegProducer(MusicSheetVideoConfiguration configuration)
+    public FfmpegVideoProducer(MusicSheetVideoConfiguration configuration)
     {
         _configuration = configuration;
     }
 
-    public async Task MakeVideo(List<Page> pages)
+    public async Task MakeVideo(List<Frame> frames)
     {
         await using var sw = new StreamWriter(_configuration.InputPath);
-        foreach (var processedPage in pages)
+        foreach (var frame in frames)
         {
-            var imageOutputPath = Path.Combine(_configuration.ImagesPath, $"{processedPage.PageNumber}.png");
+            var imageOutputPath = Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
             await sw.WriteLineAsync($"file {imageOutputPath}");
-            await sw.WriteLineAsync($"duration {Convert.ToDecimal(processedPage.LengthMilisseconds / 1000.0)}");
-            if (processedPage.Equals(pages.Last()))
+            await sw.WriteLineAsync($"duration {Convert.ToDecimal(frame.LengthMilisseconds / 1000.0)}");
+            if (frame.Equals(frames.Last()))
             {
                 await sw.WriteLineAsync($"file {imageOutputPath}");
             }

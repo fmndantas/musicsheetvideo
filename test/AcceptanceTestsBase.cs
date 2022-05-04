@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,25 +11,24 @@ public abstract class AcceptanceTestsBase
 {
     protected MusicSheetVideoConfiguration _configuration;
     private IVideoProducer _producer;
-    private IGapFiller _gapFiller;
+    private IIntervalProcesser _intervalProcesser;
     private MusicSheetVideo _app;
 
     protected async Task StartTest(
         MusicSheetVideoConfiguration configuration,
-        IGapFiller gapFiller,
+        IIntervalProcesser intervalProcesser,
         IVideoProducer producer,
-        List<Page> pages
+        List<Frame> frames
     )
     {
         _configuration = configuration;
         _producer = producer;
-        _app = new MusicSheetVideo(configuration, gapFiller, producer);
+        _app = new MusicSheetVideo(configuration, intervalProcesser, producer);
         RemoveGeneratedFiles();
-        await _app.MakeVideo(pages);
+        await _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
         AssertSlideshowWasCorrectlyProduced();
-        AssertFinalVideoWasCorrectlyProduced();
     }
 
     private void RemoveGeneratedFiles()
@@ -76,13 +74,8 @@ public abstract class AcceptanceTestsBase
             SearchOption.TopDirectoryOnly);
         Assert.AreEqual(1, output.Length);
         Assert.AreEqual(_configuration.VideoPath, output.First());
-        // ToDo: check length
-        // ToDo: check that has no audio
-    }
-
-    private void AssertFinalVideoWasCorrectlyProduced()
-    {
-        throw new NotImplementedException();
+        // ToDo: confirm video length
+        // ToDo: confirm video has no audio
     }
 
     protected abstract IEnumerable<string> FileNames();

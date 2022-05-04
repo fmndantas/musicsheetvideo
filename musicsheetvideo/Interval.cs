@@ -4,11 +4,14 @@ public class Interval : IComparable
 {
     private readonly Tick _start;
     private readonly Tick _end;
+    
+    public bool FillingGap { get; set; }
 
     public Interval(Tick start, Tick end)
     {
         _start = start;
         _end = end;
+        FillingGap = false;
     }
 
     public long LengthMilisseconds => _start.DeltaMilisseconds(_end);
@@ -26,7 +29,7 @@ public class Interval : IComparable
         return new Interval(_end, nextInterval._start);
     }
 
-    public Interval DecreaseOneMilissecond()
+    public Interval DecreaseOneMilissecondEnd()
     {
         return new Interval(_start, _end.DecreaseOneMilissecond());
     }

@@ -32,7 +32,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         var configuration = new MusicSheetVideoConfiguration(
             basePath, Path.Combine(basePath, "one-page.pdf"), Path.Combine(basePath, "one-page.wav")
         );
-        var pages = new List<Page>
+        var frames = new List<Frame>
         {
             new(new(
                     new Tick(0, 0, 0),
@@ -42,9 +42,9 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         };
         await StartTest(
             configuration,
-            new GapFiller(),
-            new FfmpegProducer(configuration),
-            pages
+            new IntervalProcesser(),
+            new FfmpegVideoProducer(configuration),
+            frames
         );
     }
 }
