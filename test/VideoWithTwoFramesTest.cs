@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using musicsheetvideo;
 using NUnit.Framework;
 
 namespace test;
 
+[TestFixture]
 public class VideoWithTwoFramesTest : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
@@ -29,11 +29,12 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
     }
 
     [Test]
-    public async Task Entrypoint()
+    public void Entrypoint()
     {
         var basePath = "/home/fernando/tmp/msv/two-pages";
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "two-pages.pdf"), Path.Combine(basePath, "two-pages.wav")
+            basePath, Path.Combine(basePath, "two-pages.pdf"),
+            Path.Combine(basePath, "audio.wav")
         );
         var frames = new List<Frame>
         {
@@ -47,7 +48,7 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
                     new Tick(0, 10, 0)),
                 1)
         };
-        await StartTest(
+        StartTest(
             configuration,
             new IntervalProcesser(),
             new FfmpegVideoProducer(configuration),

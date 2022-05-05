@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using musicsheetvideo;
@@ -46,5 +47,35 @@ public class GapFillerTests
         Assert.AreEqual(1, filled.Count);
         var uniqueFrame = filled.First();
         Assert.AreEqual(11 * 60000 + 11 * 1000 + 10, uniqueFrame.LengthMilisseconds);
+    }
+
+    [Test]
+    public void TestGapOnBeginning()
+    {
+        // 0:2:0
+        // 0:3:0
+        var tickA = new Tick(0, 2, 0);
+        var tickB = new Tick(0, 3, 0);
+        var interval = new Interval(tickA, tickB);
+        var filled = _subject.ProcessIntervals(new List<Interval> { interval });
+        Assert.AreEqual(2, filled.Count);
+        Assert.AreEqual(1999, filled[0].LengthMilisseconds);
+        Assert.AreEqual(999, filled[1].LengthMilisseconds);
+    }
+
+    [Test]
+    public void TestingProhibitedCases()
+    {
+        Assert.Throws<OverlappingIntervalsException>(TestGapFillingWithOverlappingIntervals);
+    }
+
+    private void TestGapFillingWithOverlappingIntervals()
+    {
+        var tickA = new Tick(0, 0, 0);
+        var tickB = new Tick(10, 0, 0);
+        var interval1 = new Interval(tickA, tickB);
+        var interval2 = new Interval(tickA, tickB);
+        var intervals = new List<Interval> { interval1, interval2 };
+        _subject.ProcessIntervals(intervals);
     }
 }

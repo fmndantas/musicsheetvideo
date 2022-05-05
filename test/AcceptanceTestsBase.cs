@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using musicsheetvideo;
 using NUnit.Framework;
 
@@ -14,22 +13,25 @@ public abstract class AcceptanceTestsBase
     private IVideoProducer _producer;
     private IIntervalProcesser _intervalProcesser;
     private MusicSheetVideo _app;
+    private Frame _lastFrame;
 
-    protected async Task StartTest(
+    protected void StartTest(
         MusicSheetVideoConfiguration configuration,
         IIntervalProcesser intervalProcesser,
         IVideoProducer producer,
         List<Frame> frames
     )
     {
+        frames.Sort();
+        _lastFrame = frames.Last();
         _configuration = configuration;
         _producer = producer;
         _app = new MusicSheetVideo(configuration, intervalProcesser, producer);
         RemoveGeneratedFiles();
-        await _app.MakeVideo(frames);
+        _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
-        await AssertSlideshowWasCorrectlyProduced();
+        AssertSlideshowWasCorrectlyProduced();
     }
 
     private void RemoveGeneratedFiles()
@@ -69,19 +71,24 @@ public abstract class AcceptanceTestsBase
         AnalyseInputFile(lines);
     }
 
-    private async Task AssertSlideshowWasCorrectlyProduced()
+    private void AssertSlideshowWasCorrectlyProduced()
     {
-        var output = Directory.GetFiles(_configuration.BasePath, "*.mp4", 
+        var output = Directory.GetFiles(_configuration.BasePath, "*.mp4",
             SearchOption.TopDirectoryOnly);
         Assert.AreEqual(1, output.Length);
         Assert.AreEqual(_configuration.VideoPath, output.First());
-        await AssertSlideshowDurationIsCoerent();
-        // ToDo: confirm video has no audio
+        AssertSlideshowDurationIsCoerent();
     }
 
-    private async Task AssertSlideshowDurationIsCoerent()
+    private void AssertSlideshowDurationIsCoerent()
     {
-        throw new NotImplementedException();
+        var command = new FfprobeVideoLengthCommand(_configuration);
+        decimal.TryParse(command.Do(), out var lengthDecimal);
+        Assert.LessOrEqual(
+            Math.Abs(_lastFrame.EndSecond - lengthDecimal),
+            1,
+            $"Target: {_lastFrame.EndSecond}, Actual: {lengthDecimal}"
+        );
     }
 
     protected abstract IEnumerable<string> FileNames();

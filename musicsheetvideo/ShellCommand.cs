@@ -6,16 +6,16 @@ public abstract class ShellCommand : ICommand
 {
     private readonly string _command;
     private readonly string _arguments;
-    
-    protected ShellCommand(string command, string arguments, int delay)
+
+    protected ShellCommand(string command, string arguments)
     {
         _command = command;
         _arguments = arguments;
     }
 
     public string Command => $"{_command} {_arguments}";
-    
-    public async Task Do()
+
+    public string Do()
     {
         var startInfo = new ProcessStartInfo(_command)
         {
@@ -24,21 +24,23 @@ public abstract class ShellCommand : ICommand
             RedirectStandardError = true
         };
         using var process = new Process();
+        var output = string.Empty;
+        var error = string.Empty;
         try
         {
             process.StartInfo = startInfo;
             process.Start();
-            while (!process.StandardOutput.EndOfStream)
-            {
-                var line = await process.StandardOutput.ReadLineAsync();
-                Console.WriteLine(line);
-            }
-
-            await process.WaitForExitAsync();
+            output += process.StandardOutput.ReadToEnd();
+            error += process.StandardError.ReadToEnd();
+            process.WaitForExit();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Problem on slideshow command execution: \"{ex.Message}\"");
+            var message = $"Problem on ShellCommand execution: \"{ex.Message}\"";
+            message += error.Length > 0 ? $"\nstderror: {error}" : string.Empty;
+            throw new Exception(message);
         }
+
+        return output;
     }
 }
