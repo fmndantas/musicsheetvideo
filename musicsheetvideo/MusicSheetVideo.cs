@@ -17,7 +17,7 @@ public class MusicSheetVideo
         _videoProducer = videoProducer;
     }
 
-    public async Task MakeVideo(List<Frame> frames)
+    public void MakeVideo(List<Frame> frames)
     {
         var intervals = frames.Select(x => x.Interval).ToList();
         var treatedIntervals = _intervalProcesser.ProcessIntervals(intervals);
@@ -27,7 +27,6 @@ public class MusicSheetVideo
         {
             treatedFrames.Add(new Frame(filledInterval, filledInterval.FillingGap ? -1 : frames[i++].PageNumber));
         }
-
-        await _videoProducer.MakeVideo(treatedFrames);
+        _videoProducer.MakeVideo(treatedFrames);
     }
 }

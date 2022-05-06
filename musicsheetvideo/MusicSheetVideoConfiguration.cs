@@ -11,6 +11,7 @@ public class MusicSheetVideoConfiguration
     public string ImagesPath => Path.Combine(BasePath, "images");
     public string InputPath => Path.Combine(BasePath, "input.txt");
     public string VideoPath => Path.Combine(BasePath, "output.mp4");
+    public string FinalVideoPath => Path.Combine(BasePath, "final-output.mp4");
 
     public MusicSheetVideoConfiguration(string basePath,
         string pdfPath,

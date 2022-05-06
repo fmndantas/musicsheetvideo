@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using musicsheetvideo;
 using NUnit.Framework;
 using Path = System.IO.Path;
@@ -20,17 +19,19 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
 
     protected override void AnalyseInputFile(string[] lines)
     {
+        Assert.AreEqual(4, lines.Length);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[0]);
-        Assert.AreEqual("duration 9.999", lines[1]);
+        Assert.AreEqual("duration 10", lines[1]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
     }
 
     [Test]
-    public async Task Entrypoint()
+    public void Entrypoint()
     {
         var basePath = "/home/fernando/tmp/msv/one-page";
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "one-page.pdf"), Path.Combine(basePath, "one-page.wav")
+            basePath, Path.Combine(basePath, "one-page.pdf"),
+            Path.Combine(basePath, "audio.wav")
         );
         var frames = new List<Frame>
         {
@@ -40,7 +41,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
                 ),
                 1),
         };
-        await StartTest(
+        StartTest(
             configuration,
             new IntervalProcesser(),
             new FfmpegVideoProducer(configuration),

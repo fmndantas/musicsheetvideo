@@ -72,4 +72,9 @@ public class Tick : IComparable
 
         return new Tick(0, 0, 0);
     }
+
+    public override string ToString()
+    {
+        return $"[{Minutes}:{Seconds}:{Milisseconds}]";
+    }
 }

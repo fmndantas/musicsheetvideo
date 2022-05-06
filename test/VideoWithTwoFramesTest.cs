@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using musicsheetvideo;
 using NUnit.Framework;
 
 namespace test;
 
+[TestFixture]
 public class VideoWithTwoFramesTest : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
@@ -22,18 +22,19 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
     {
         Assert.AreEqual(6, lines.Length);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "2.png")}", lines[0]);
-        Assert.AreEqual($"duration 4.999", lines[1]);
+        Assert.AreEqual($"duration 5", lines[1]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
-        Assert.AreEqual($"duration 4.999", lines[3]);
+        Assert.AreEqual($"duration 5", lines[3]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[4]);
     }
 
     [Test]
-    public async Task Entrypoint()
+    public void Entrypoint()
     {
         var basePath = "/home/fernando/tmp/msv/two-pages";
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "two-pages.pdf"), Path.Combine(basePath, "two-pages.wav")
+            basePath, Path.Combine(basePath, "two-pages.pdf"),
+            Path.Combine(basePath, "audio.wav")
         );
         var frames = new List<Frame>
         {
@@ -47,7 +48,7 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
                     new Tick(0, 10, 0)),
                 1)
         };
-        await StartTest(
+        StartTest(
             configuration,
             new IntervalProcesser(),
             new FfmpegVideoProducer(configuration),
