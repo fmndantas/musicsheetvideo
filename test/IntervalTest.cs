@@ -52,7 +52,6 @@ public class IntervalTest
                 new Tick(1,59,999),
                 false
             );
-
         }
     }
 

@@ -21,13 +21,13 @@ public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
     {
         Assert.AreEqual(10, lines.Length);
         Assert.AreEqual($"file {_configuration.ImagesPath}/-1.png", lines[0]);
-        Assert.AreEqual($"duration 1.999", lines[1]);
+        Assert.AreEqual($"duration 2", lines[1]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/1.png", lines[2]);
-        Assert.AreEqual($"duration 0.999", lines[3]);
+        Assert.AreEqual($"duration 1", lines[3]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/-1.png", lines[4]);
-        Assert.AreEqual($"duration 0.999", lines[5]);
+        Assert.AreEqual($"duration 1", lines[5]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/2.png", lines[6]);
-        Assert.AreEqual($"duration 0.999", lines[7]);
+        Assert.AreEqual($"duration 1", lines[7]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/2.png", lines[8]);
     }
 

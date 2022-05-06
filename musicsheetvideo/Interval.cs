@@ -18,11 +18,6 @@ public class Interval : IComparable
 
     public decimal EndInSeconds => Convert.ToDecimal(_end.DurationMilissecondsToZero / 1000.0);
 
-    public Interval DecreaseOneMilissecondEnd()
-    {
-        return new Interval(_start, _end.DecreaseOneMilissecond());
-    }
-
     public Interval Gap(Interval nextInterval)
     {
         return new Interval(_end, nextInterval._start);

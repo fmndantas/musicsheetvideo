@@ -22,9 +22,9 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
     {
         Assert.AreEqual(6, lines.Length);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "2.png")}", lines[0]);
-        Assert.AreEqual($"duration 4.999", lines[1]);
+        Assert.AreEqual($"duration 5", lines[1]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
-        Assert.AreEqual($"duration 4.999", lines[3]);
+        Assert.AreEqual($"duration 5", lines[3]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[4]);
     }
 

@@ -27,17 +27,18 @@ public abstract class AcceptanceTestsBase
         _configuration = configuration;
         _producer = producer;
         _app = new MusicSheetVideo(configuration, intervalProcesser, producer);
-        RemoveGeneratedFiles();
+        DeleteGeneratedFiles();
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
         AssertSlideshowWasCorrectlyProduced();
     }
 
-    private void RemoveGeneratedFiles()
+    private void DeleteGeneratedFiles()
     {
         File.Delete(_configuration.InputPath);
         File.Delete(_configuration.VideoPath);
+        File.Delete(_configuration.FinalVideoPath);
     }
 
     private void AssertImagesWereCreatedCorrectly()
@@ -75,7 +76,7 @@ public abstract class AcceptanceTestsBase
     {
         var output = Directory.GetFiles(_configuration.BasePath, "*.mp4",
             SearchOption.TopDirectoryOnly);
-        Assert.AreEqual(1, output.Length);
+        Assert.AreEqual(2, output.Length);
         Assert.AreEqual(_configuration.VideoPath, output.First());
         AssertSlideshowDurationIsCoerent();
     }

@@ -8,22 +8,19 @@ public class IntervalProcesser : IIntervalProcesser
         AssertAllIntervalsAreNonOverlapping(intervals);
         var processedIntervals = new List<Interval>();
         var tick0 = new Tick(0, 0, 0);
-        var dummyInterval = new Interval(tick0, tick0)
-            .Gap(intervals[0])
-            .DecreaseOneMilissecondEnd();
+        var dummyInterval = new Interval(tick0, tick0).Gap(intervals[0]);
         if (dummyInterval.LengthMilisseconds > 0)
         {
             dummyInterval.FillingGap = true;
             processedIntervals.Add(dummyInterval);
         }
+
         for (var i = 0; i < intervals.Count; ++i)
         {
-            processedIntervals.Add(intervals[i].DecreaseOneMilissecondEnd());
+            processedIntervals.Add(intervals[i]);
             if (i + 1 < intervals.Count)
             {
-                var gapFilling = intervals[i]
-                    .Gap(intervals[i + 1])
-                    .DecreaseOneMilissecondEnd();
+                var gapFilling = intervals[i].Gap(intervals[i + 1]);
                 if (gapFilling.LengthMilisseconds > 0)
                 {
                     gapFilling.FillingGap = true;
@@ -50,7 +47,8 @@ public class IntervalProcesser : IIntervalProcesser
         {
             var overlappingIntervalsText =
                 string.Join(", ", overlappingList.Select(x => $"{x[0]} and {x[1]}"));
-            throw new OverlappingIntervalsException($"Some intervals overlapped; they are ({overlappingIntervalsText})");
+            throw new OverlappingIntervalsException(
+                $"Some intervals overlapped; they are ({overlappingIntervalsText})");
         }
     }
 }

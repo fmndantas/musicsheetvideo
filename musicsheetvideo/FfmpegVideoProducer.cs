@@ -25,6 +25,8 @@ public class FfmpegVideoProducer : IVideoProducer
 
         sw.Close();
         var slideshowCommand = new FfmpegSlideshowCommand(_configuration);
+        var joinAudioCommand = new FfmpegJoinAudioCommand(_configuration);
         slideshowCommand.Do();
+        joinAudioCommand.Do();
     }
 }
