@@ -11,13 +11,13 @@ public abstract class AcceptanceTestsBase
 {
     protected MusicSheetVideoConfiguration _configuration;
     private IVideoProducer _producer;
-    private IIntervalProcesser _intervalProcesser;
+    private IIntervalProcessor _intervalProcessor;
     private MusicSheetVideo _app;
     private Frame _lastFrame;
 
     protected void StartTest(
         MusicSheetVideoConfiguration configuration,
-        IIntervalProcesser intervalProcesser,
+        IFrameProcessor frameProcessor,
         IVideoProducer producer,
         List<Frame> frames
     )
@@ -26,7 +26,7 @@ public abstract class AcceptanceTestsBase
         _lastFrame = frames.Last();
         _configuration = configuration;
         _producer = producer;
-        _app = new MusicSheetVideo(configuration, intervalProcesser, producer);
+        _app = new MusicSheetVideo(configuration, frameProcessor, producer);
         DeleteGeneratedFiles();
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();

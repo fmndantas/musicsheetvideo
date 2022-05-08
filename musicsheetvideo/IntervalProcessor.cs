@@ -1,6 +1,6 @@
 namespace musicsheetvideo;
 
-public class IntervalProcesser : IIntervalProcesser
+public class IntervalProcessor : IIntervalProcessor
 {
     public List<Interval> ProcessIntervals(List<Interval> intervals)
     {
@@ -11,7 +11,6 @@ public class IntervalProcesser : IIntervalProcesser
         var dummyInterval = new Interval(tick0, tick0).Gap(intervals[0]);
         if (dummyInterval.LengthMilisseconds > 0)
         {
-            dummyInterval.FillingGap = true;
             processedIntervals.Add(dummyInterval);
         }
 
@@ -23,7 +22,6 @@ public class IntervalProcesser : IIntervalProcesser
                 var gapFilling = intervals[i].Gap(intervals[i + 1]);
                 if (gapFilling.LengthMilisseconds > 0)
                 {
-                    gapFilling.FillingGap = true;
                     processedIntervals.Add(gapFilling);
                 }
             }

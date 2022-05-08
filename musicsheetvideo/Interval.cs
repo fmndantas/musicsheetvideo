@@ -20,7 +20,9 @@ public class Interval : IComparable
 
     public Interval Gap(Interval nextInterval)
     {
-        return new Interval(_end, nextInterval._start);
+        var result = new Interval(_end, nextInterval._start);
+        result.FillingGap = true;
+        return result;
     }
 
     public bool Overlaps(Interval other)

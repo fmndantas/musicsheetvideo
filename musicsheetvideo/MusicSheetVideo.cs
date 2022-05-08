@@ -3,30 +3,22 @@ namespace musicsheetvideo;
 public class MusicSheetVideo
 {
     private readonly MusicSheetVideoConfiguration _configuration;
-    private readonly IIntervalProcesser _intervalProcesser;
+    private readonly IFrameProcessor _frameProcessor;
     private readonly IVideoProducer _videoProducer;
 
     public MusicSheetVideo(
         MusicSheetVideoConfiguration configuration,
-        IIntervalProcesser intervalProcesser,
+        IFrameProcessor frameProcessor,
         IVideoProducer videoProducer
     )
     {
         _configuration = configuration;
-        _intervalProcesser = intervalProcesser;
+        _frameProcessor = frameProcessor;
         _videoProducer = videoProducer;
     }
 
     public void MakeVideo(List<Frame> frames)
     {
-        var intervals = frames.Select(x => x.Interval).ToList();
-        var treatedIntervals = _intervalProcesser.ProcessIntervals(intervals);
-        var treatedFrames = new List<Frame>();
-        var i = 0;
-        foreach (var filledInterval in treatedIntervals)
-        {
-            treatedFrames.Add(new Frame(filledInterval, filledInterval.FillingGap ? -1 : frames[i++].PageNumber));
-        }
-        _videoProducer.MakeVideo(treatedFrames);
+        _videoProducer.MakeVideo(_frameProcessor.ProcessFrames(frames));
     }
 }

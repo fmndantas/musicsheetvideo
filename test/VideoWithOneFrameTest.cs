@@ -43,7 +43,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         };
         StartTest(
             configuration,
-            new IntervalProcesser(),
+            new FrameProcessor(new IntervalProcessor()),
             new FfmpegVideoProducer(configuration),
             frames
         );
