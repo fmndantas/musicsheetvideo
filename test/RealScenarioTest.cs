@@ -30,9 +30,11 @@ public class RealScenarioTest
                 new Tick(0, 40, 0)
             ), 3)
         };
-        var app = new MusicSheetVideo(configuration,
-            new IntervalProcesser(),
-            new FfmpegVideoProducer(configuration));
+        var app = new MusicSheetVideo(
+            configuration,
+            new FrameProcessor(new IntervalProcessor()),
+            new FfmpegVideoProducer(configuration)
+        );
         app.MakeVideo(frames);
     }
 }

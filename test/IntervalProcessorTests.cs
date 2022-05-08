@@ -6,11 +6,11 @@ namespace test;
 
 public class IntervalProcessorTests
 {
-    private readonly IIntervalProcesser _subject;
+    private readonly IIntervalProcessor _subject;
 
     public IntervalProcessorTests()
     {
-        _subject = new IntervalProcesser();
+        _subject = new IntervalProcessor();
     }
 
     private static IEnumerable<TestCaseData> IntervalLengthCorrectnesData

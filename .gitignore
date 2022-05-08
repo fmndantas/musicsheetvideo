@@ -2,3 +2,5 @@
 *DotSettings*
 bin
 obj
+coveragereport
+TestResults

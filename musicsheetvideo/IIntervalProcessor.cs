@@ -1,6 +1,6 @@
 namespace musicsheetvideo;
 
-public interface IIntervalProcesser
+public interface IIntervalProcessor
 {
     List<Interval> ProcessIntervals(List<Interval> intervals);
 }

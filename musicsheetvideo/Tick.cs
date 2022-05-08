@@ -53,26 +53,6 @@ public class Tick : IComparable
         return Minutes.CompareTo(otherTick.Minutes);
     }
 
-    public Tick DecreaseOneMilissecond()
-    {
-        if (Milisseconds > 0)
-        {
-            return new Tick(Minutes, Seconds, Milisseconds - 1);
-        }
-
-        if (Seconds > 0)
-        {
-            return new Tick(Minutes, Seconds - 1, 999);
-        }
-
-        if (Minutes > 0)
-        {
-            return new Tick(Minutes - 1, 59, 999);
-        }
-
-        return new Tick(0, 0, 0);
-    }
-
     public override string ToString()
     {
         return $"[{Minutes}:{Seconds}:{Milisseconds}]";
