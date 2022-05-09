@@ -21,7 +21,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
     {
         Assert.AreEqual(4, lines.Length);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[0]);
-        Assert.AreEqual("duration 10", lines[1]);
+        Assert.AreEqual("duration 10.000", lines[1]);
         Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
     }
 
@@ -31,7 +31,8 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         var basePath = "/home/fernando/tmp/msv/one-page";
         var configuration = new MusicSheetVideoConfiguration(
             basePath, Path.Combine(basePath, "one-page.pdf"),
-            Path.Combine(basePath, "audio.wav")
+            Path.Combine(basePath, "audio.wav"),
+            Path.Combine(basePath, "images/-1.png")
         );
         var frames = new List<Frame>
         {

@@ -5,15 +5,17 @@ public class Frame : IComparable
     public Interval Interval { get; }
     public int PageNumber { get; }
 
-    public decimal EndSecond => Interval.EndInSeconds;
-    
     public Frame(Interval interval, int pageNumber)
     {
         Interval = interval;
         PageNumber = pageNumber;
     }
 
+    public decimal EndSecond => Interval.EndInSeconds;
+
     public long LengthMilisseconds => Interval.LengthMilisseconds;
+
+    public bool FillingGap => Interval.FillingGap;
 
     public int CompareTo(object? obj)
     {

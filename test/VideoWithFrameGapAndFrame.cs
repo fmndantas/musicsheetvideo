@@ -21,13 +21,13 @@ public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
     {
         Assert.AreEqual(10, lines.Length);
         Assert.AreEqual($"file {_configuration.ImagesPath}/-1.png", lines[0]);
-        Assert.AreEqual($"duration 2", lines[1]);
+        Assert.AreEqual($"duration 2.000", lines[1]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/1.png", lines[2]);
-        Assert.AreEqual($"duration 1", lines[3]);
+        Assert.AreEqual($"duration 1.000", lines[3]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/-1.png", lines[4]);
-        Assert.AreEqual($"duration 1", lines[5]);
+        Assert.AreEqual($"duration 1.000", lines[5]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/2.png", lines[6]);
-        Assert.AreEqual($"duration 1", lines[7]);
+        Assert.AreEqual($"duration 1.000", lines[7]);
         Assert.AreEqual($"file {_configuration.ImagesPath}/2.png", lines[8]);
     }
 
@@ -37,7 +37,8 @@ public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
         var basePath = "/home/fernando/tmp/msv/frame-gap-frame";
         var configuration = new MusicSheetVideoConfiguration(
             basePath, Path.Combine(basePath, "frame-gap-frame.pdf"),
-            Path.Combine(basePath, "audio.wav")
+            Path.Combine(basePath, "audio.wav"),
+            Path.Combine(basePath, "images/-1.png")
         );
         var frames = new List<Frame>
         {

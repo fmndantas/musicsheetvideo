@@ -14,6 +14,7 @@ public class ShellCommandTests
         _configuration = new MusicSheetVideoConfiguration(
             "/home/fernando/tmp/msv/two-pages", 
             string.Empty, 
+            string.Empty,
             string.Empty
         );
     }
@@ -26,7 +27,8 @@ public class ShellCommandTests
         {
             "ffmpeg", "-y", "-f", "concat", "-safe",
             "0", "-i", _configuration.InputPath, "-vf", "\"crop=trunc(iw/2)*2:trunc(ih/2)*2\"",
-            "-vsync", "vfr", "-pix_fmt", "yuv420p", _configuration.VideoPath
+            "-vsync", "vfr", "-pix_fmt", "yuv420p", "-hide_banner", "-loglevel", "error",
+            _configuration.VideoPath
         };
         Assert.AreEqual(string.Join(" ", target), _command.Command);
     }

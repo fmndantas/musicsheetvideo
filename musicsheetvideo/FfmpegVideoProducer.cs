@@ -14,9 +14,12 @@ public class FfmpegVideoProducer : IVideoProducer
         using var sw = new StreamWriter(_configuration.InputPath);
         foreach (var frame in frames)
         {
-            var imageOutputPath = Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
+            var imageOutputPath = frame.FillingGap 
+                ? _configuration.DefaultImage
+                : Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
+            var duration = frame.LengthMilisseconds / 1000.0;
             sw.WriteLine($"file {imageOutputPath}");
-            sw.WriteLine($"duration {Convert.ToDecimal(frame.LengthMilisseconds / 1000.0)}");
+            sw.WriteLine($"duration {duration:0.000}");
             if (frame.Equals(frames.Last()))
             {
                 sw.WriteLine($"file {imageOutputPath}");

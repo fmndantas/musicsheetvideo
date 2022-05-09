@@ -24,23 +24,15 @@ public abstract class ShellCommand : ICommand
             RedirectStandardError = true
         };
         using var process = new Process();
-        var output = string.Empty;
-        var error = string.Empty;
-        try
+        process.StartInfo = startInfo;
+        process.Start();
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+        if (error.Length > 0)
         {
-            process.StartInfo = startInfo;
-            process.Start();
-            output += process.StandardOutput.ReadToEnd();
-            error += process.StandardError.ReadToEnd();
-            process.WaitForExit();
+            throw new ShellCommandExecutionException(error);
         }
-        catch (Exception ex)
-        {
-            var message = $"Problem on ShellCommand execution: \"{ex.Message}\"";
-            message += error.Length > 0 ? $"\nstderror: {error}" : string.Empty;
-            throw new Exception(message);
-        }
-
+        process.WaitForExit();
         return output;
     }
 }
