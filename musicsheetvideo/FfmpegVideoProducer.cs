@@ -3,10 +3,16 @@ namespace musicsheetvideo;
 public class FfmpegVideoProducer : IVideoProducer
 {
     private readonly MusicSheetVideoConfiguration _configuration;
+    private readonly List<ICommand> _commands;
 
     public FfmpegVideoProducer(MusicSheetVideoConfiguration configuration)
     {
         _configuration = configuration;
+        _commands = new List<ICommand>
+        {
+            new FfmpegSlideshowCommand(configuration),
+            new FfmpegJoinAudioCommand(configuration)
+        };
     }
 
     public void MakeVideo(List<Frame> frames)
@@ -14,7 +20,7 @@ public class FfmpegVideoProducer : IVideoProducer
         using var sw = new StreamWriter(_configuration.InputPath);
         foreach (var frame in frames)
         {
-            var imageOutputPath = frame.FillingGap 
+            var imageOutputPath = frame.FillingGap
                 ? _configuration.DefaultImage
                 : Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
             var duration = frame.LengthMilisseconds / 1000.0;
@@ -27,9 +33,9 @@ public class FfmpegVideoProducer : IVideoProducer
         }
 
         sw.Close();
-        var slideshowCommand = new FfmpegSlideshowCommand(_configuration);
-        var joinAudioCommand = new FfmpegJoinAudioCommand(_configuration);
-        slideshowCommand.Do();
-        joinAudioCommand.Do();
+        foreach (var command in _commands)
+        {
+            command.Do();
+        }
     }
 }
