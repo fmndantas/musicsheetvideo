@@ -12,8 +12,8 @@ public class ShellCommandTests
     public ShellCommandTests()
     {
         _configuration = new MusicSheetVideoConfiguration(
-            "/home/fernando/tmp/msv/two-pages", 
-            string.Empty, 
+            "/home/fernando/tmp/msv/two-pages",
+            string.Empty,
             string.Empty,
             string.Empty
         );
@@ -40,5 +40,16 @@ public class ShellCommandTests
         Assert.AreEqual($"ffprobe -v error -show_entries format=duration " +
                         $"-of default=noprint_wrappers=1:nokey=1 {_configuration.VideoPath}",
             _command.Command);
+    }
+
+    [Test]
+    public void TestProhibitedCases()
+    {
+        Assert.Throws<ShellCommandExecutionException>(TestStderrOutputWhenCommandDoesNotExists);
+    }
+    
+    private void TestStderrOutputWhenCommandDoesNotExists()
+    {
+        new WrongCommand().Do();
     }
 }

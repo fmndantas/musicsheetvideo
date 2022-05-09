@@ -25,14 +25,25 @@ public abstract class ShellCommand : ICommand
         };
         using var process = new Process();
         process.StartInfo = startInfo;
-        process.Start();
-        var output = process.StandardOutput.ReadToEnd();
-        var error = process.StandardError.ReadToEnd();
-        if (error.Length > 0)
+        var output = string.Empty;
+        var error = string.Empty;
+        try
         {
-            throw new ShellCommandExecutionException(error);
+            process.Start();
+            output = process.StandardOutput.ReadToEnd();
+            error = process.StandardError.ReadToEnd();
+            if (error.Length > 0)
+            {
+                throw new Exception(error);
+            }
+
+            process.WaitForExit();
         }
-        process.WaitForExit();
+        catch (Exception ex)
+        {
+            throw new ShellCommandExecutionException(ex.Message);
+        }
+
         return output;
     }
 }
