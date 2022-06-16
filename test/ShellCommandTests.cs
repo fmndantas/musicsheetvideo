@@ -28,7 +28,8 @@ public class ShellCommandTests
         var target = new List<string>
         {
             "ffmpeg", "-y", "-f", "concat", "-safe",
-            "0", "-i", _configuration.InputPath, "-vf", "\"crop=trunc(iw/2)*2:trunc(ih/2)*2\"",
+            "0", "-i", _configuration.InputPath, "-vf", 
+            "\"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1\"",
             "-vsync", "vfr", "-pix_fmt", "yuv420p", "-hide_banner", "-loglevel", "error",
             _configuration.VideoPath
         };
