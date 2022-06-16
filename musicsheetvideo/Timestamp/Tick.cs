@@ -1,4 +1,4 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.Timestamp;
 
 public class Tick : IComparable
 {

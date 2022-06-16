@@ -1,6 +1,7 @@
 using System.Diagnostics;
+using musicsheetvideo.CustomException;
 
-namespace musicsheetvideo;
+namespace musicsheetvideo.Command;
 
 public abstract class ShellCommand : ICommand
 {

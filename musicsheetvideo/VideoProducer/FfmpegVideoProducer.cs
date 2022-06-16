@@ -1,4 +1,6 @@
-namespace musicsheetvideo;
+using musicsheetvideo.Command;
+
+namespace musicsheetvideo.VideoProducer;
 
 public class FfmpegVideoProducer : IVideoProducer
 {
@@ -15,7 +17,7 @@ public class FfmpegVideoProducer : IVideoProducer
         };
     }
 
-    public void MakeVideo(List<Frame> frames)
+    public void MakeVideo(List<Frame.Frame> frames)
     {
         using var sw = new StreamWriter(_configuration.InputPath);
         foreach (var frame in frames)
@@ -23,7 +25,7 @@ public class FfmpegVideoProducer : IVideoProducer
             var imageOutputPath = frame.FillingGap
                 ? _configuration.DefaultImage
                 : Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
-            var duration = frame.LengthMilisseconds / 1000.0;
+            var duration = frame.LengthSeconds;
             sw.WriteLine($"file {imageOutputPath}");
             sw.WriteLine($"duration {duration:0.000}");
             if (frame.Equals(frames.Last()))

@@ -1,4 +1,4 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.Command;
 
 public interface ICommand
 {

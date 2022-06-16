@@ -1,4 +1,4 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.Frame;
 
 public interface IFrameProcessor
 {

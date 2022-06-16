@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using musicsheetvideo;
+using musicsheetvideo.Timestamp;
 using NUnit.Framework;
 
 namespace test;
 
-public class TickTests
+public class TestTick
 {
     [Test]
-    public void TestDurationInMilisseconds()
+    public void HaveDurationInMilissecondsBasedOnItsTimestampAttributes()
     {
         var tick = new Tick(10, 10, 10);
         Assert.AreEqual(10 * 60 * 1000 + 10 * 1000 + 10, tick.DurationMilissecondsToZero);

@@ -1,11 +1,11 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.Timestamp;
 
 public class Interval : IComparable
 {
     private readonly Tick _start;
     private readonly Tick _end;
 
-    public bool FillingGap { get; set; }
+    public bool FillingGap { get; }
 
     public Interval(Tick start, Tick end)
     {
@@ -14,14 +14,20 @@ public class Interval : IComparable
         FillingGap = false;
     }
 
+    private Interval(Tick start, Tick end, bool toFillGap)
+    {
+        _start = start;
+        _end = end;
+        FillingGap = toFillGap;
+    }
+
     public long LengthMilisseconds => _start.DeltaMilisseconds(_end);
 
     public decimal EndInSeconds => Convert.ToDecimal(_end.DurationMilissecondsToZero / 1000.0);
 
     public Interval Gap(Interval nextInterval)
     {
-        var result = new Interval(_end, nextInterval._start);
-        result.FillingGap = true;
+        var result = new Interval(_end, nextInterval._start, true);
         return result;
     }
 

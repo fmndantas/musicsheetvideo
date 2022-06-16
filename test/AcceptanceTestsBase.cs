@@ -1,8 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using musicsheetvideo;
+using musicsheetvideo.Command;
+using musicsheetvideo.Frame;
+using musicsheetvideo.Timestamp;
+using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
 namespace test;
@@ -26,7 +29,7 @@ public abstract class AcceptanceTestsBase
         _lastFrame = frames.Last();
         _configuration = configuration;
         _producer = producer;
-        _app = new MusicSheetVideo(configuration, frameProcessor, producer);
+        _app = new MusicSheetVideo(frameProcessor, producer);
         DeleteGeneratedFiles();
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
@@ -85,11 +88,7 @@ public abstract class AcceptanceTestsBase
     {
         var command = new FfprobeVideoLengthCommand(_configuration);
         decimal.TryParse(command.Do(), out var lengthDecimal);
-        Assert.LessOrEqual(
-            Math.Abs(_lastFrame.EndSecond - lengthDecimal),
-            1,
-            $"Target: {_lastFrame.EndSecond}, Actual: {lengthDecimal}"
-        );
+        Assert.GreaterOrEqual(lengthDecimal, _lastFrame.EndSecond);
     }
 
     protected abstract IEnumerable<string> FileNames();

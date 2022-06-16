@@ -1,4 +1,6 @@
-namespace musicsheetvideo;
+using musicsheetvideo.Timestamp;
+
+namespace musicsheetvideo.Frame;
 
 public class FrameProcessor : IFrameProcessor
 {
@@ -19,12 +21,7 @@ public class FrameProcessor : IFrameProcessor
         var i = 0;
         foreach (var filledInterval in treatedIntervals)
         {
-            treatedFrames.Add(new Frame(
-                filledInterval,
-                filledInterval.FillingGap
-                    ? -1
-                    : frames[i++].PageNumber
-            ));
+            treatedFrames.Add(new Frame(filledInterval, filledInterval.FillingGap ? -1 : frames[i++].PageNumber));
         }
 
         return treatedFrames;

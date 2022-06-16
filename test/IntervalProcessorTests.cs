@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using musicsheetvideo;
+using musicsheetvideo.CustomException;
+using musicsheetvideo.Timestamp;
 using NUnit.Framework;
 
 namespace test;

@@ -1,11 +1,11 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.Frame;
 
 public class Frame : IComparable
 {
-    public Interval Interval { get; }
+    public Timestamp.Interval Interval { get; }
     public int PageNumber { get; }
 
-    public Frame(Interval interval, int pageNumber)
+    public Frame(Timestamp.Interval interval, int pageNumber)
     {
         Interval = interval;
         PageNumber = pageNumber;
@@ -13,7 +13,9 @@ public class Frame : IComparable
 
     public decimal EndSecond => Interval.EndInSeconds;
 
-    public long LengthMilisseconds => Interval.LengthMilisseconds;
+    private long LengthMilisseconds => Interval.LengthMilisseconds;
+
+    public double LengthSeconds => LengthMilisseconds / 1000.0;
 
     public bool FillingGap => Interval.FillingGap;
 

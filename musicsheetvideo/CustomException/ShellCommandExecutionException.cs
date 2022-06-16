@@ -1,6 +1,6 @@
-namespace musicsheetvideo;
+namespace musicsheetvideo.CustomException;
 
-public class ShellCommandExecutionException : Exception
+public class ShellCommandExecutionException : System.Exception
 {
     private static string Message = "Error when executing shell command";
 
@@ -12,7 +12,7 @@ public class ShellCommandExecutionException : Exception
     {
     }
 
-    public ShellCommandExecutionException(string message, Exception ex) : base(Message + $": {message}", ex)
+    public ShellCommandExecutionException(string message, System.Exception ex) : base(Message + $": {message}", ex)
     {
     }
 }
