@@ -1,3 +1,5 @@
+using musicsheetvideo.CustomException;
+
 namespace musicsheetvideo.Timestamp;
 
 public class Interval : IComparable
@@ -12,6 +14,7 @@ public class Interval : IComparable
         _start = start;
         _end = end;
         FillingGap = false;
+        AssertIntervalIsNotInverted(start, end);
     }
 
     private Interval(Tick start, Tick end, bool toFillGap)
@@ -19,6 +22,19 @@ public class Interval : IComparable
         _start = start;
         _end = end;
         FillingGap = toFillGap;
+        AssertIntervalIsNotInverted(start, end);
+    }
+
+    private void AssertIntervalIsNotInverted(Tick start, Tick end)
+    {
+        var startUntil0 = start.DurationMilissecondsToZero;
+        var endUntil0 = end.DurationMilissecondsToZero;
+        if (startUntil0 > endUntil0)
+        {
+            throw new InvertedIntervalException(
+                $"the interval is inverted; start tick {start} should be less or equal than end tick {end}"
+            );
+        }
     }
 
     public long LengthMilisseconds => _start.DeltaMilisseconds(_end);
