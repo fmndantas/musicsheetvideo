@@ -1,8 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using musicsheetvideo;
+using musicsheetvideo.Command;
+using musicsheetvideo.Frame;
+using musicsheetvideo.Timestamp;
+using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
 namespace test;
@@ -26,7 +29,7 @@ public abstract class AcceptanceTestsBase
         _lastFrame = frames.Last();
         _configuration = configuration;
         _producer = producer;
-        _app = new MusicSheetVideo(configuration, frameProcessor, producer);
+        _app = new MusicSheetVideo(frameProcessor, producer);
         DeleteGeneratedFiles();
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
@@ -55,7 +58,7 @@ public abstract class AcceptanceTestsBase
 
     private void AssertFfmpegInputFileWasCreatedCorrectly()
     {
-        var ffmpegInput = Path.Combine(_configuration.BasePath, "input.txt");
+        var ffmpegInput = Path.Combine(_configuration.OutputPath, "input.txt");
         Assert.True(File.Exists(ffmpegInput));
         var content = string.Empty;
         try
@@ -74,7 +77,7 @@ public abstract class AcceptanceTestsBase
 
     private void AssertSlideshowWasCorrectlyProduced()
     {
-        var output = Directory.GetFiles(_configuration.BasePath, "*.mp4",
+        var output = Directory.GetFiles(_configuration.OutputPath, "*.mp4",
             SearchOption.TopDirectoryOnly);
         Assert.AreEqual(2, output.Length);
         Assert.AreEqual(_configuration.VideoPath, output.First());
@@ -85,11 +88,7 @@ public abstract class AcceptanceTestsBase
     {
         var command = new FfprobeVideoLengthCommand(_configuration);
         decimal.TryParse(command.Do(), out var lengthDecimal);
-        Assert.LessOrEqual(
-            Math.Abs(_lastFrame.EndSecond - lengthDecimal),
-            1,
-            $"Target: {_lastFrame.EndSecond}, Actual: {lengthDecimal}"
-        );
+        Assert.GreaterOrEqual(lengthDecimal, _lastFrame.EndSecond);
     }
 
     protected abstract IEnumerable<string> FileNames();

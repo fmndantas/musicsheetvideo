@@ -1,4 +1,6 @@
-namespace musicsheetvideo;
+using musicsheetvideo.CustomException;
+
+namespace musicsheetvideo.Timestamp;
 
 public class IntervalProcessor : IIntervalProcessor
 {
@@ -17,14 +19,7 @@ public class IntervalProcessor : IIntervalProcessor
         for (var i = 0; i < intervals.Count; ++i)
         {
             processedIntervals.Add(intervals[i]);
-            if (i + 1 < intervals.Count)
-            {
-                var gapFilling = intervals[i].Gap(intervals[i + 1]);
-                if (gapFilling.LengthMilisseconds > 0)
-                {
-                    processedIntervals.Add(gapFilling);
-                }
-            }
+            AddGapUntilNextIntervalIfItsLengthIsPositive(i, intervals, processedIntervals);
         }
 
         return processedIntervals;
@@ -47,6 +42,20 @@ public class IntervalProcessor : IIntervalProcessor
                 string.Join(", ", overlappingList.Select(x => $"{x[0]} and {x[1]}"));
             throw new OverlappingIntervalsException(
                 $"Some intervals overlapped; they are ({overlappingIntervalsText})");
+        }
+    }
+
+    private void AddGapUntilNextIntervalIfItsLengthIsPositive(
+        int position,
+        List<Interval> allIntervals,
+        List<Interval> processedIntervals
+    )
+    {
+        if (position + 1 >= allIntervals.Count) return;
+        var gapFilling = allIntervals[position].Gap(allIntervals[position + 1]);
+        if (gapFilling.LengthMilisseconds > 0)
+        {
+            processedIntervals.Add(gapFilling);
         }
     }
 }

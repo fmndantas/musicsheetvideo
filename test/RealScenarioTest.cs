@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using musicsheetvideo;
+using musicsheetvideo.Command;
+using musicsheetvideo.Frame;
+using musicsheetvideo.Timestamp;
+using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
 namespace test;
@@ -31,11 +35,6 @@ public class RealScenarioTest : AcceptanceTestsBase
                 new Tick(0, 40, 0)
             ), 3)
         };
-        var app = new MusicSheetVideo(
-            configuration,
-            new FrameProcessor(new IntervalProcessor()),
-            new FfmpegVideoProducer(configuration)
-        );
         StartTest(
             configuration,
             new FrameProcessor(new IntervalProcessor()),
