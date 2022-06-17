@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using musicsheetvideo;
-using musicsheetvideo.Command;
 using musicsheetvideo.Frame;
+using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
@@ -16,9 +16,11 @@ public class RealScenarioTest : AcceptanceTestsBase
     {
         var basePath = "/home/fernando/tmp/msv/contra-babilonia";
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "Contra-Babilonia.pdf"),
+            basePath, Path.Combine(basePath, "three-pages.pdf"),
             Path.Combine(basePath, "extrair-audio.wav"),
-            "/home/fernando/black.png"
+            "/home/fernando/black.jpg",
+            "page",
+            "jpg"
         );
         var frames = new List<Frame>
         {
@@ -37,6 +39,7 @@ public class RealScenarioTest : AcceptanceTestsBase
         };
         StartTest(
             configuration,
+            new ImagemagickPdfConverter(configuration),
             new FrameProcessor(new IntervalProcessor()),
             new FfmpegVideoProducer(configuration),
             frames
@@ -45,7 +48,7 @@ public class RealScenarioTest : AcceptanceTestsBase
 
     protected override IEnumerable<string> FileNames()
     {
-        return new List<string> { "1.png", "2.png", "3.png" };
+        return new List<string> { "page-0.jpg", "page-1.jpg", "page-2.jpg" };
     }
 
     protected override int NumberOfExpectedImages()
@@ -56,10 +59,14 @@ public class RealScenarioTest : AcceptanceTestsBase
     protected override void AnalyseInputFile(string[] lines)
     {
         Assert.AreEqual("duration 10.000", lines[1]);
-        Assert.AreEqual("file /home/fernando/black.png", lines[2]);
+        Assert.AreEqual($"file {_configuration.DefaultImage}", lines[2]);
         Assert.AreEqual("duration 0.500", lines[3]);
+        Assert.AreEqual($"file {Path.Join(_configuration.ImagesPath, "page-1.jpg")}", lines[4]);
         Assert.AreEqual("duration 21.503", lines[5]);
+        Assert.AreEqual($"file {_configuration.DefaultImage}", lines[6]);
         Assert.AreEqual("duration 0.001", lines[7]);
+        Assert.AreEqual($"file {Path.Join(_configuration.ImagesPath, "page-2.jpg")}", lines[8]);
         Assert.AreEqual("duration 7.996", lines[9]);
+        Assert.AreEqual($"file {Path.Join(_configuration.ImagesPath, "page-2.jpg")}", lines[10]);
     }
 }

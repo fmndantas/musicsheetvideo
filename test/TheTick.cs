@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace test;
 
-public class TestTick
+public class TheTick
 {
     [Test]
     public void HaveDurationInMilissecondsBasedOnItsTimestampAttributes()
@@ -13,7 +13,7 @@ public class TestTick
         Assert.AreEqual(10 * 60 * 1000 + 10 * 1000 + 10, tick.DurationMilissecondsToZero);
     }
 
-    private static IEnumerable<TestCaseData> DurationMilissecondsData
+    private static IEnumerable<TestCaseData> IntervalDurationInMilissecondsData
     {
         get
         {
@@ -23,8 +23,8 @@ public class TestTick
                 0
             );
             yield return new TestCaseData(
-                new Tick(0,0,0),
-                new Tick(0,10,0),
+                new Tick(0, 0, 0),
+                new Tick(0, 10, 0),
                 10000
             );
             yield return new TestCaseData(
@@ -35,14 +35,11 @@ public class TestTick
         }
     }
 
-    [Test, TestCaseSource("DurationMilissecondsData")]
-    public void TestDecreaseOneMilissecond(Tick tick, Tick otherTick, long target)
+    [Test, TestCaseSource("IntervalDurationInMilissecondsData")]
+    public void InformsTheIntervalDurationInMilissecondsBetweenItselfAndAnotherTick(
+        Tick tick, Tick otherTick, long target
+    )
     {
-        AssertTickDurationEqualTo(tick.DeltaMilisseconds(otherTick), target);
-    }
-    
-    private void AssertTickDurationEqualTo(long tested, long target)
-    {
-        Assert.AreEqual(target, tested);
+        Assert.AreEqual(target, tick.DeltaMilisseconds(otherTick));
     }
 }

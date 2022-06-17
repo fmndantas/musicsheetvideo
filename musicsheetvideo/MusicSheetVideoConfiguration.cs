@@ -2,29 +2,31 @@ namespace musicsheetvideo;
 
 public class MusicSheetVideoConfiguration
 {
-    private readonly string _outputPath;
-    private readonly string _pdfPath;
-    private readonly string _audioPath;
-    private readonly string _defaultImage;
-    public string OutputPath => _outputPath;
-    public string PdfPath => _pdfPath;
-    public string AudioPath => _audioPath;
+    public string OutputPath { get; }
+    public string PdfPath { get; }
+    public string AudioPath { get; }
+    public string DefaultImage { get; }
+    public string ImagePrefix { get; }
+    public string ImageFormat { get; }
     public string ImagesPath => Path.Combine(OutputPath, "images");
     public string InputPath => Path.Combine(OutputPath, "input.txt");
     public string VideoPath => Path.Combine(OutputPath, "output.mp4");
     public string FinalVideoPath => Path.Combine(OutputPath, "final-output.mp4");
-    public string DefaultImage => _defaultImage;
 
     public MusicSheetVideoConfiguration(
         string outputPath,
         string pdfPath,
         string audioPath,
-        string defaultImagePath
+        string defaultImagePath,
+        string imagePrefix,
+        string imageFormat
     )
     {
-        _outputPath = outputPath;
-        _pdfPath = pdfPath;
-        _audioPath = audioPath;
-        _defaultImage = defaultImagePath;
+        OutputPath = outputPath;
+        PdfPath = pdfPath;
+        AudioPath = audioPath;
+        DefaultImage = defaultImagePath;
+        ImagePrefix = imagePrefix;
+        ImageFormat = imageFormat;
     }
 }

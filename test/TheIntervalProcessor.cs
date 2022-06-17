@@ -1,62 +1,61 @@
 using System.Collections.Generic;
-using musicsheetvideo;
 using musicsheetvideo.CustomException;
 using musicsheetvideo.Timestamp;
 using NUnit.Framework;
 
 namespace test;
 
-public class IntervalProcessorTests
+public class TheIntervalProcessor
 {
     private readonly IIntervalProcessor _subject;
 
-    public IntervalProcessorTests()
+    public TheIntervalProcessor()
     {
         _subject = new IntervalProcessor();
     }
 
-	    private static IEnumerable<TestCaseData> ProcessingWithGapData
-	    {
-		get
-		{
-		    yield return new TestCaseData(
-			new List<Tick>
-			{
-			    new(0, 0, 0),
-			    new(0, 5, 0),
-			    new(1, 6, 1),
-			    new(10, 0, 0),
-			},
-			3,
-			new List<int> { 5000, 61001, 999 + 53 * 1000 + 8 * 1000 * 60 }
-		    );
-		    yield return new TestCaseData(
-			new List<Tick>
-			{
-			    new(0, 0, 0),
-			    new(11, 11, 11)
-			},
-			1,
-			new List<int> { 11 * (1000 * 60 + 1000 + 1) }
-		    );
-		    yield return new TestCaseData(
-			new List<Tick>
-			{
-			    new(0, 2, 0),
-			    new(0, 3, 0)
-			},
-			2,
-			new List<int> { 2000, 1000 }
-		    );
-		    yield return new TestCaseData(
-			new List<Tick>
-			{
-			    new(0, 0, 0),
-			    new(0, 5, 0),
-			    new(0, 5, 0),
-			    new(0, 10, 0)
-			},
-			2,
+    private static IEnumerable<TestCaseData> ProcessingWithGapData
+    {
+        get
+        {
+            yield return new TestCaseData(
+                new List<Tick>
+                {
+                    new(0, 0, 0),
+                    new(0, 5, 0),
+                    new(1, 6, 1),
+                    new(10, 0, 0),
+                },
+                3,
+                new List<int> { 5000, 61001, 999 + 53 * 1000 + 8 * 1000 * 60 }
+            );
+            yield return new TestCaseData(
+                new List<Tick>
+                {
+                    new(0, 0, 0),
+                    new(11, 11, 11)
+                },
+                1,
+                new List<int> { 11 * (1000 * 60 + 1000 + 1) }
+            );
+            yield return new TestCaseData(
+                new List<Tick>
+                {
+                    new(0, 2, 0),
+                    new(0, 3, 0)
+                },
+                2,
+                new List<int> { 2000, 1000 }
+            );
+            yield return new TestCaseData(
+                new List<Tick>
+                {
+                    new(0, 0, 0),
+                    new(0, 5, 0),
+                    new(0, 5, 0),
+                    new(0, 10, 0)
+                },
+                2,
                 new List<int> { 5000, 5000 }
             );
             yield return new TestCaseData(
@@ -74,7 +73,7 @@ public class IntervalProcessorTests
     }
 
     [Test, TestCaseSource("ProcessingWithGapData")]
-    public void ProcessIntervalsAndFillThemIfThereAreAnyGap(List<Tick> ticks, int numberOfIntervals, List<int> lengths)
+    public void ProcessIntervalsAndFillThemIfThereIsAnyGap(List<Tick> ticks, int numberOfIntervals, List<int> lengths)
     {
         var intervals = new List<Interval>();
         for (var i = 0; i < ticks.Count; i += 2)
@@ -91,7 +90,7 @@ public class IntervalProcessorTests
     }
 
     [Test]
-    public void TestingProhibitedCases()
+    public void ThrowsOverlappingIntervalsExceptionWhenTwoIntervalsOverlap()
     {
         Assert.Throws<OverlappingIntervalsException>(TestGapFillingWithOverlappingIntervals);
     }

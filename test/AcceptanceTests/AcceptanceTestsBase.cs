@@ -4,6 +4,7 @@ using System.Linq;
 using musicsheetvideo;
 using musicsheetvideo.Command;
 using musicsheetvideo.Frame;
+using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
@@ -20,17 +21,18 @@ public abstract class AcceptanceTestsBase
 
     protected void StartTest(
         MusicSheetVideoConfiguration configuration,
+        IPdfConverter pdfConverter,
         IFrameProcessor frameProcessor,
-        IVideoProducer producer,
+        IVideoProducer videoProducer,
         List<Frame> frames
     )
     {
         frames.Sort();
         _lastFrame = frames.Last();
         _configuration = configuration;
-        _producer = producer;
-        _app = new MusicSheetVideo(frameProcessor, producer);
+        _producer = videoProducer;
         DeleteGeneratedFiles();
+        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoProducer);
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
@@ -42,6 +44,10 @@ public abstract class AcceptanceTestsBase
         File.Delete(_configuration.InputPath);
         File.Delete(_configuration.VideoPath);
         File.Delete(_configuration.FinalVideoPath);
+        foreach (var image in Directory.GetFiles(_configuration.ImagesPath, "*", SearchOption.AllDirectories))
+        {
+            File.Delete(image);
+        }
     }
 
     private void AssertImagesWereCreatedCorrectly()

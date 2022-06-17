@@ -17,18 +17,20 @@ public class TheShellCommand
             "/home/fernando/tmp/msv/two-pages",
             string.Empty,
             string.Empty,
-            string.Empty
+            string.Empty,
+            "page",
+            "jpg"
         );
     }
 
     [Test]
-    public void SlideshowCommandHasFollowingContent()
+    public void FfmpegSlideshowCommandHasContent()
     {
         _command = new FfmpegSlideshowCommand(_configuration);
         var target = new List<string>
         {
             "ffmpeg", "-y", "-f", "concat", "-safe",
-            "0", "-i", _configuration.InputPath, "-vf", 
+            "0", "-i", _configuration.InputPath, "-vf",
             "\"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1\"",
             "-vsync", "vfr", "-pix_fmt", "yuv420p", "-hide_banner", "-loglevel", "error",
             _configuration.VideoPath
@@ -37,7 +39,7 @@ public class TheShellCommand
     }
 
     [Test]
-    public void LengthCommandHasFollowingContent()
+    public void FfmpegLengthCommandHasContent()
     {
         _command = new FfprobeVideoLengthCommand(_configuration);
         Assert.AreEqual($"ffprobe -v error -show_entries format=duration " +
@@ -46,8 +48,18 @@ public class TheShellCommand
     }
 
     [Test]
+    public void ImagemagickCommandHasContent()
+    {
+        _command = new ImagemagickPdfConversionCommand(_configuration);
+        Assert.AreEqual($"convert -density 300 {_configuration.PdfPath} -quality 100 " +
+                        $"{_configuration.ImagesPath}/{_configuration.ImagePrefix}-%d.{_configuration.ImageFormat}",
+            _command.Command);
+    }
+
+
+    [Test]
     public void ThrowsShellCommandExecutionExceptionWhenIsInvalid()
     {
-        Assert.Throws<ShellCommandExecutionException>(() => { new WrongCommand().Do(); } );
+        Assert.Throws<ShellCommandExecutionException>(() => { new WrongCommand().Do(); });
     }
 }

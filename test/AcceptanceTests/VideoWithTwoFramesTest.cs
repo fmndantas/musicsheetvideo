@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using musicsheetvideo;
-using musicsheetvideo.Command;
 using musicsheetvideo.Frame;
+using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
@@ -14,7 +14,7 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
     {
-        return new List<string> { "1.png", "2.png" };
+        return new List<string> { "page-0.jpg", "page-1.jpg" };
     }
 
     protected override int NumberOfExpectedImages()
@@ -25,11 +25,11 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
     protected override void AnalyseInputFile(string[] lines)
     {
         Assert.AreEqual(6, lines.Length);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "2.png")}", lines[0]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-1.jpg")}", lines[0]);
         Assert.AreEqual($"duration 5.000", lines[1]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
         Assert.AreEqual($"duration 5.000", lines[3]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[4]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[4]);
     }
 
     [Test]
@@ -39,7 +39,9 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
         var configuration = new MusicSheetVideoConfiguration(
             basePath, Path.Combine(basePath, "two-pages.pdf"),
             Path.Combine(basePath, "audio.wav"),
-            Path.Combine(basePath, "images/-1.png")
+            "/home/fernando/black.png",
+            "page",
+            "jpg"
         );
         var frames = new List<Frame>
         {
@@ -55,6 +57,7 @@ public class VideoWithTwoFramesTest : AcceptanceTestsBase
         };
         StartTest(
             configuration,
+            new ImagemagickPdfConverter(configuration),
             new FrameProcessor(new IntervalProcessor()),
             new FfmpegVideoProducer(configuration),
             frames

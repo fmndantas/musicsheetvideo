@@ -24,7 +24,8 @@ public class FfmpegVideoProducer : IVideoProducer
         {
             var imageOutputPath = frame.FillingGap
                 ? _configuration.DefaultImage
-                : Path.Combine(_configuration.ImagesPath, $"{frame.PageNumber}.png");
+                : Path.Combine(_configuration.ImagesPath,
+                    $"{_configuration.ImagePrefix}-{frame.PageNumber - 1}.{_configuration.ImageFormat}");
             var duration = frame.LengthSeconds;
             sw.WriteLine($"file {imageOutputPath}");
             sw.WriteLine($"duration {duration:0.000}");

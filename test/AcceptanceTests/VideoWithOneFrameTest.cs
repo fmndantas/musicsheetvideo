@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using musicsheetvideo;
 using musicsheetvideo.Frame;
+using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
@@ -12,7 +13,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
     {
-        return new List<string> { "1.png" };
+        return new List<string> { "page-0.jpg" };
     }
 
     protected override int NumberOfExpectedImages()
@@ -23,9 +24,9 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
     protected override void AnalyseInputFile(string[] lines)
     {
         Assert.AreEqual(4, lines.Length);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[0]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[0]);
         Assert.AreEqual("duration 10.000", lines[1]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "1.png")}", lines[2]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
     }
 
     [Test]
@@ -35,7 +36,10 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         var configuration = new MusicSheetVideoConfiguration(
             basePath, Path.Combine(basePath, "one-page.pdf"),
             Path.Combine(basePath, "audio.wav"),
-            Path.Combine(basePath, "images/-1.png")
+            string.Empty,
+            "page",
+            "jpg"
+
         );
         var frames = new List<Frame>
         {
@@ -47,6 +51,7 @@ public class VideoWithOneFrameTest : AcceptanceTestsBase
         };
         StartTest(
             configuration,
+            new ImagemagickPdfConverter(configuration),
             new FrameProcessor(new IntervalProcessor()),
             new FfmpegVideoProducer(configuration),
             frames
