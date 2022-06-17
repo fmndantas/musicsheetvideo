@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using musicsheetvideo;
-using musicsheetvideo.Command;
 using musicsheetvideo.Frame;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 using Path = System.IO.Path;
 
-namespace test;
+namespace test.AcceptanceTests;
 
 public class VideoWithOneFrameTest : AcceptanceTestsBase
 {

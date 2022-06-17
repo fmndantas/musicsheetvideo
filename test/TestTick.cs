@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using musicsheetvideo;
 using musicsheetvideo.Timestamp;
 using NUnit.Framework;
 

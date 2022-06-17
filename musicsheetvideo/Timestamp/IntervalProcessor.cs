@@ -41,7 +41,8 @@ public class IntervalProcessor : IIntervalProcessor
             var overlappingIntervalsText =
                 string.Join(", ", overlappingList.Select(x => $"{x[0]} and {x[1]}"));
             throw new OverlappingIntervalsException(
-                $"Some intervals overlapped; they are ({overlappingIntervalsText})");
+                $"some intervals overlapped; they are ({overlappingIntervalsText})"
+            );
         }
     }
 

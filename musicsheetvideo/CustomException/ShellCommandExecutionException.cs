@@ -1,6 +1,6 @@
 namespace musicsheetvideo.CustomException;
 
-public class ShellCommandExecutionException : System.Exception
+public class ShellCommandExecutionException : Exception
 {
     private static string Message = "Error when executing shell command";
 

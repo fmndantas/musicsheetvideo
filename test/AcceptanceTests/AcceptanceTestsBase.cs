@@ -8,7 +8,7 @@ using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
-namespace test;
+namespace test.AcceptanceTests;
 
 public abstract class AcceptanceTestsBase
 {

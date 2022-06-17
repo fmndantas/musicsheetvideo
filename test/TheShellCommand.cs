@@ -6,12 +6,12 @@ using NUnit.Framework;
 
 namespace test;
 
-public class ShellCommandTests
+public class TheShellCommand
 {
     private readonly MusicSheetVideoConfiguration _configuration;
     private ShellCommand? _command;
 
-    public ShellCommandTests()
+    public TheShellCommand()
     {
         _configuration = new MusicSheetVideoConfiguration(
             "/home/fernando/tmp/msv/two-pages",
@@ -22,7 +22,7 @@ public class ShellCommandTests
     }
 
     [Test]
-    public void TestSlideshowCommand()
+    public void SlideshowCommandHasFollowingContent()
     {
         _command = new FfmpegSlideshowCommand(_configuration);
         var target = new List<string>
@@ -37,7 +37,7 @@ public class ShellCommandTests
     }
 
     [Test]
-    public void TestLengthCommand()
+    public void LengthCommandHasFollowingContent()
     {
         _command = new FfprobeVideoLengthCommand(_configuration);
         Assert.AreEqual($"ffprobe -v error -show_entries format=duration " +
@@ -46,13 +46,8 @@ public class ShellCommandTests
     }
 
     [Test]
-    public void TestProhibitedCases()
+    public void ThrowsShellCommandExecutionExceptionWhenIsInvalid()
     {
-        Assert.Throws<ShellCommandExecutionException>(TestStderrOutputWhenCommandDoesNotExists);
-    }
-    
-    private void TestStderrOutputWhenCommandDoesNotExists()
-    {
-        new WrongCommand().Do();
+        Assert.Throws<ShellCommandExecutionException>(() => { new WrongCommand().Do(); } );
     }
 }

@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using musicsheetvideo;
-using musicsheetvideo.Command;
 using musicsheetvideo.Frame;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
-namespace test;
+namespace test.AcceptanceTests;
 
 public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
 {

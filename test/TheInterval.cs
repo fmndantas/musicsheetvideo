@@ -5,9 +5,9 @@ using NUnit.Framework;
 
 namespace test;
 
-public class IntervalTest
+public class TheInterval
 {
-    public static IEnumerable<TestCaseData> OverlappingTestCases
+    public static IEnumerable<TestCaseData> OverlappingIntervalsData
     {
         get
         {
@@ -56,8 +56,8 @@ public class IntervalTest
         }
     }
 
-    [Test, TestCaseSource("OverlappingTestCases")]
-    public void TestOverlapping(Tick tick1, Tick tick2, Tick tick3, Tick tick4, bool target)
+    [Test, TestCaseSource("OverlappingIntervalsData")]
+    public void InformsWhenOverlapsWithAnotherInterval(Tick tick1, Tick tick2, Tick tick3, Tick tick4, bool target)
     {
         var interval1 = new Interval(tick1, tick2);
         var interval2 = new Interval(tick3, tick4);
@@ -65,7 +65,7 @@ public class IntervalTest
     }
 
     [Test]
-    public void TestEndInSeconds()
+    public void InformsItsTotalLenghtInSeconds()
     {
         var tickA = new Tick(0, 0, 0);
         var tickB = new Tick(0, 10, 0);

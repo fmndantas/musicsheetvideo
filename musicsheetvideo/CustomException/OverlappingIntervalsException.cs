@@ -1,6 +1,6 @@
 namespace musicsheetvideo.CustomException;
 
-public class OverlappingIntervalsException : System.Exception
+public class OverlappingIntervalsException : Exception
 {
     public OverlappingIntervalsException() : base("Intervals are overlapping")
     {
