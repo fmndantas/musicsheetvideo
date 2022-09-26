@@ -5,7 +5,7 @@ namespace test;
 
 public class WrongCommand : ShellCommand
 {
-    public WrongCommand() : base("foolish", "command")
+    public WrongCommand() : base("wrong", "command")
     {
     }
 }

@@ -72,7 +72,7 @@ public class TheIntervalProcessor
         }
     }
 
-    [Test, TestCaseSource("ProcessingWithGapData")]
+    [Test, TestCaseSource(nameof(ProcessingWithGapData))]
     public void ProcessIntervalsAndFillThemIfThereIsAnyGap(List<Tick> ticks, int numberOfIntervals, List<int> lengths)
     {
         var intervals = new List<Interval>();

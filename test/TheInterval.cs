@@ -56,7 +56,7 @@ public class TheInterval
         }
     }
 
-    [Test, TestCaseSource("OverlappingIntervalsData")]
+    [Test, TestCaseSource(nameof(OverlappingIntervalsData))]
     public void InformsWhenOverlapsWithAnotherInterval(Tick tick1, Tick tick2, Tick tick3, Tick tick4, bool target)
     {
         var interval1 = new Interval(tick1, tick2);

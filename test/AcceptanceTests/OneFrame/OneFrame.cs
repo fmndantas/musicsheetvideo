@@ -7,9 +7,9 @@ using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 using Path = System.IO.Path;
 
-namespace test.AcceptanceTests;
+namespace test.AcceptanceTests.OneFrame;
 
-public class VideoWithOneFrameTest : AcceptanceTestsBase
+public class OneFrame : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
     {

@@ -7,9 +7,9 @@ using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
-namespace test.AcceptanceTests;
+namespace test.AcceptanceTests.AComplexCase;
 
-public class RealScenarioTest : AcceptanceTestsBase
+public class ComplexCase : AcceptanceTestsBase
 {
     [Test]
     public void Entrypoint()

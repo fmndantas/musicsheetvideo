@@ -7,9 +7,10 @@ using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
 
-namespace test.AcceptanceTests;
+namespace test.AcceptanceTests.TwoFrames;
 
-public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
+[TestFixture]
+public class TwoFrames : AcceptanceTestsBase
 {
     protected override IEnumerable<string> FileNames()
     {
@@ -23,42 +24,36 @@ public class VideoWithFrameGapAndFrame : AcceptanceTestsBase
 
     protected override void AnalyseInputFile(string[] lines)
     {
-        Assert.AreEqual(10, lines.Length);
-        Assert.AreEqual($"file {_configuration.DefaultImage}", lines[0]);
-        Assert.AreEqual($"duration 2.000", lines[1]);
-        Assert.AreEqual($"file {_configuration.ImagesPath}/page-0.jpg", lines[2]);
-        Assert.AreEqual($"duration 1.000", lines[3]);
-        Assert.AreEqual($"file {_configuration.DefaultImage}", lines[4]);
-        Assert.AreEqual($"duration 1.000", lines[5]);
-        Assert.AreEqual($"file {_configuration.ImagesPath}/page-1.jpg", lines[6]);
-        Assert.AreEqual($"duration 1.000", lines[7]);
-        Assert.AreEqual($"file {_configuration.ImagesPath}/page-1.jpg", lines[8]);
+        Assert.AreEqual(6, lines.Length);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-1.jpg")}", lines[0]);
+        Assert.AreEqual($"duration 5.000", lines[1]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
+        Assert.AreEqual($"duration 5.000", lines[3]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[4]);
     }
 
     [Test]
     public void Entrypoint()
     {
-        var basePath = "/home/fernando/tmp/msv/frame-gap-frame";
+        var basePath = "/home/fernando/tmp/msv/two-pages";
         var configuration = new MusicSheetVideoConfiguration(
-            basePath,
-            Path.Combine(basePath, "Contra-Babilonia.pdf"),
+            basePath, Path.Combine(basePath, "two-pages.pdf"),
             Path.Combine(basePath, "audio.wav"),
-            "/home/fernando/black.jpg",
+            "/home/fernando/black.png",
             "page",
             "jpg"
         );
         var frames = new List<Frame>
         {
             new(new(
-                    new Tick(0, 2, 0),
-                    new Tick(0, 3, 0)
-                ),
-                1),
-            new(new(
-                    new Tick(0, 4, 0),
+                    new Tick(0, 0, 0),
                     new Tick(0, 5, 0)
                 ),
                 2),
+            new(new Interval(
+                    new Tick(0, 5, 0),
+                    new Tick(0, 10, 0)),
+                1)
         };
         StartTest(
             configuration,

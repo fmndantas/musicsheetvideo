@@ -35,7 +35,7 @@ public class TheTick
         }
     }
 
-    [Test, TestCaseSource("IntervalDurationInMilissecondsData")]
+    [Test, TestCaseSource(nameof(IntervalDurationInMilissecondsData))]
     public void InformsTheIntervalDurationInMilissecondsBetweenItselfAndAnotherTick(
         Tick tick, Tick otherTick, long target
     )
