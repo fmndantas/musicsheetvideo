@@ -11,32 +11,14 @@ namespace test.AcceptanceTests.OneFrame;
 
 public class OneFrame : AcceptanceTestsBase
 {
-    protected override IEnumerable<string> FileNames()
-    {
-        return new List<string> { "page-0.jpg" };
-    }
-
-    protected override int NumberOfExpectedImages()
-    {
-        return 1;
-    }
-
-    protected override void AnalyseInputFile(string[] lines)
-    {
-        Assert.AreEqual(4, lines.Length);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[0]);
-        Assert.AreEqual("duration 10.000", lines[1]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
-    }
-
     [Test]
     public void Entrypoint()
     {
-        var basePath = "/home/fernando/tmp/msv/one-page";
+        var here = Path.Combine(BasePath, "OneFrame/Data");
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "one-page.pdf"),
-            Path.Combine(basePath, "audio.wav"),
-            string.Empty,
+            here, Path.Combine(here, "pdf.pdf"),
+            Path.Combine(here, "audio.wav"),
+            DefaultImagePath,
             "page",
             "jpg"
 
@@ -53,8 +35,26 @@ public class OneFrame : AcceptanceTestsBase
             configuration,
             new ImagemagickPdfConverter(configuration),
             new FrameProcessor(new IntervalProcessor()),
-            new FfmpegVideoProducer(configuration),
+            new FfmpegVideoMaker(configuration),
             frames
         );
+    }
+
+    protected override IEnumerable<string> FileNames()
+    {
+        return new List<string> { "page-0.jpg" };
+    }
+
+    protected override int NumberOfExpectedImages()
+    {
+        return 1;
+    }
+
+    protected override void AnalyseInputFile(string[] lines)
+    {
+        Assert.AreEqual(4, lines.Length);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[0]);
+        Assert.AreEqual("duration 10.000", lines[1]);
+        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
     }
 }

@@ -14,11 +14,11 @@ public class ComplexCase : AcceptanceTestsBase
     [Test]
     public void Entrypoint()
     {
-        var basePath = "/home/fernando/tmp/msv/contra-babilonia";
+        var here = Path.Combine(BasePath, "AComplexCase/Data");
         var configuration = new MusicSheetVideoConfiguration(
-            basePath, Path.Combine(basePath, "three-pages.pdf"),
-            Path.Combine(basePath, "extrair-audio.wav"),
-            "/home/fernando/black.jpg",
+            here, Path.Combine(here, "pdf.pdf"),
+            Path.Combine(here, "audio.wav"),
+            DefaultImagePath,
             "page",
             "jpg"
         );
@@ -41,7 +41,7 @@ public class ComplexCase : AcceptanceTestsBase
             configuration,
             new ImagemagickPdfConverter(configuration),
             new FrameProcessor(new IntervalProcessor()),
-            new FfmpegVideoProducer(configuration),
+            new FfmpegVideoMaker(configuration),
             frames
         );
     }

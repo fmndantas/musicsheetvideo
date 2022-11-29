@@ -7,23 +7,23 @@ namespace musicsheetvideo;
 public class MusicSheetVideo
 {
     private readonly IFrameProcessor _frameProcessor;
-    private readonly IVideoProducer _videoProducer;
+    private readonly IVideoMaker _videoMaker;
     private readonly IPdfConverter _pdfConverter;
 
     public MusicSheetVideo(
         IPdfConverter pdfConverter,
         IFrameProcessor frameProcessor,
-        IVideoProducer videoProducer
+        IVideoMaker videoMaker
     )
     {
         _pdfConverter = pdfConverter;
         _frameProcessor = frameProcessor;
-        _videoProducer = videoProducer;
+        _videoMaker = videoMaker;
     }
 
     public void MakeVideo(List<Frame.Frame> frames)
     {
         _pdfConverter.ConvertPdfToImages();
-        _videoProducer.MakeVideo(_frameProcessor.ProcessFrames(frames));
+        _videoMaker.MakeVideo(_frameProcessor.ProcessFrames(frames));
     }
 }

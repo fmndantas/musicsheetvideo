@@ -11,10 +11,20 @@ using NUnit.Framework;
 
 namespace test.AcceptanceTests;
 
+[TestFixture]
+[Category("integration")]
+[Category("acceptance")]
 public abstract class AcceptanceTestsBase
 {
+    protected const string BasePath = "/home/fernando/Documents/github/musicsheetvideo/test/AcceptanceTests/";
+    protected readonly string DefaultImagePath;
     protected MusicSheetVideoConfiguration _configuration;
-    private IVideoProducer _producer;
+
+    protected AcceptanceTestsBase()
+    {
+        DefaultImagePath = Path.Combine(BasePath, "Data/default-image.jpg");
+    }
+
     private IIntervalProcessor _intervalProcessor;
     private MusicSheetVideo _app;
     private Frame _lastFrame;
@@ -23,16 +33,15 @@ public abstract class AcceptanceTestsBase
         MusicSheetVideoConfiguration configuration,
         IPdfConverter pdfConverter,
         IFrameProcessor frameProcessor,
-        IVideoProducer videoProducer,
+        IVideoMaker videoMaker,
         List<Frame> frames
     )
     {
         frames.Sort();
         _lastFrame = frames.Last();
         _configuration = configuration;
-        _producer = videoProducer;
         DeleteGeneratedFiles();
-        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoProducer);
+        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoMaker);
         _app.MakeVideo(frames);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
@@ -41,12 +50,27 @@ public abstract class AcceptanceTestsBase
 
     private void DeleteGeneratedFiles()
     {
-        File.Delete(_configuration.InputPath);
-        File.Delete(_configuration.VideoPath);
-        File.Delete(_configuration.FinalVideoPath);
-        foreach (var image in Directory.GetFiles(_configuration.ImagesPath, "*", SearchOption.AllDirectories))
+        if (File.Exists(_configuration.InputPath))
         {
-            File.Delete(image);
+            File.Delete(_configuration.InputPath);
+        }
+
+        if (File.Exists(_configuration.VideoPath))
+        {
+            File.Delete(_configuration.VideoPath);
+        }
+
+        if (File.Exists(_configuration.FinalVideoPath))
+        {
+            File.Delete(_configuration.FinalVideoPath);
+        }
+
+        if (Directory.Exists(_configuration.ImagesPath))
+        {
+            foreach (var image in Directory.GetFiles(_configuration.ImagesPath, "*", SearchOption.AllDirectories))
+            {
+                File.Delete(image);
+            }
         }
     }
 

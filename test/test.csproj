@@ -22,4 +22,11 @@
       <Compile Remove="PdfManipulatorTests.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="AcceptanceTests\AComplexCase\Data" />
+      <Folder Include="AcceptanceTests\Data" />
+      <Folder Include="AcceptanceTests\OneFrame\Data" />
+      <Folder Include="AcceptanceTests\TwoFrames\Data" />
+    </ItemGroup>
+
 </Project>

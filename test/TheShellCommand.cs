@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace test;
 
+[TestFixture]
 public class TheShellCommand
 {
     private readonly MusicSheetVideoConfiguration _configuration;
