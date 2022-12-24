@@ -1,11 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
 using musicsheetvideo;
-using musicsheetvideo.Frame;
+using musicsheetvideo.Command;
 using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
-using Path = System.IO.Path;
+using test.Stubs;
 
 namespace test.AcceptanceTests.OneFrame;
 
@@ -21,7 +22,6 @@ public class OneFrame : AcceptanceTestsBase
             DefaultImagePath,
             "page",
             "jpg"
-
         );
         var frames = new List<Frame>
         {
@@ -31,11 +31,16 @@ public class OneFrame : AcceptanceTestsBase
                 ),
                 1),
         };
+        var progressNotification = new NullProgressNotification();
         StartTest(
             configuration,
-            new ImagemagickPdfConverter(configuration),
-            new FrameProcessor(new IntervalProcessor()),
-            new FfmpegVideoMaker(configuration),
+            new ImagemagickPdfConverter(progressNotification, new ImagemagickPdfConversionCommand(configuration)),
+            new FrameProcessor(new IntervalProcessor(), progressNotification),
+            new FfmpegVideoMaker(
+                new List<ICommand>
+                    { new FfmpegSlideshowCommand(configuration), new FfmpegJoinAudioCommand(configuration) },
+                progressNotification
+            ),
             frames
         );
     }
@@ -53,8 +58,8 @@ public class OneFrame : AcceptanceTestsBase
     protected override void AnalyseInputFile(string[] lines)
     {
         Assert.AreEqual(4, lines.Length);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[0]);
+        Assert.AreEqual($"file {Path.Combine(Configuration.ImagesPath, "page-0.jpg")}", lines[0]);
         Assert.AreEqual("duration 10.000", lines[1]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
+        Assert.AreEqual($"file {Path.Combine(Configuration.ImagesPath, "page-0.jpg")}", lines[2]);
     }
 }

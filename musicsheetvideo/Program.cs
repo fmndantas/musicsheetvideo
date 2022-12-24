@@ -1,1 +1,0 @@
-﻿Console.WriteLine("Ops! This package does nothing. It is just the core of the processing.");

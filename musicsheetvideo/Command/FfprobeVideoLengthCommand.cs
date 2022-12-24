@@ -8,4 +8,6 @@ public class FfprobeVideoLengthCommand : ShellCommand
     )
     {
     }
+
+    public override string DescribeItselfRunning => "Testing video lenght through ffmpeg";
 }

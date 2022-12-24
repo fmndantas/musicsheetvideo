@@ -47,4 +47,6 @@ public abstract class ShellCommand : ICommand
 
         return output;
     }
+
+    public abstract string DescribeItselfRunning { get; }
 }

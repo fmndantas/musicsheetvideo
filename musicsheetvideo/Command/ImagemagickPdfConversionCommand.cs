@@ -11,4 +11,6 @@ public class ImagemagickPdfConversionCommand : ShellCommand
     )
     {
     }
+
+    public override string DescribeItselfRunning => "Converting .pdf to images through Imagemagick";
 }

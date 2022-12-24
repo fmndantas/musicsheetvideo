@@ -17,4 +17,6 @@ public class FfmpegSlideshowCommand : ShellCommand
     )
     {
     }
+
+    public override string DescribeItselfRunning => "Producing slideshow through ffmpeg";
 }

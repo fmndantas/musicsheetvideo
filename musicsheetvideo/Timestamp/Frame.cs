@@ -1,11 +1,12 @@
-namespace musicsheetvideo.Frame;
+namespace musicsheetvideo.Timestamp;
 
 public class Frame : IComparable
 {
-    public Timestamp.Interval Interval { get; }
+    public const int PageToFillingFrame = -1;
+    public Interval Interval { get; }
     public int PageNumber { get; }
 
-    public Frame(Timestamp.Interval interval, int pageNumber)
+    public Frame(Interval interval, int pageNumber)
     {
         Interval = interval;
         PageNumber = pageNumber;
@@ -33,5 +34,11 @@ public class Frame : IComparable
         }
 
         return Interval.CompareTo(otherFrame.Interval);
+    }
+
+    public override string ToString()
+    {
+        return
+            $"Frame[{(PageNumber == PageToFillingFrame ? "" : $"PageNumber={PageNumber}, ")}Interval={Interval}]";
     }
 }

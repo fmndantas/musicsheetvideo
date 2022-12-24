@@ -9,4 +9,6 @@ public class WrongCommand : ShellCommand
     public WrongCommand() : base("wrong", "command")
     {
     }
+
+    public override string DescribeItselfRunning => "";
 }

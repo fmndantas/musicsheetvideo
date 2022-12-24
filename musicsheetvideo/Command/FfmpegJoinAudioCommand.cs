@@ -9,4 +9,6 @@ public class FfmpegJoinAudioCommand : ShellCommand
     )
     {
     }
+
+    public override string DescribeItselfRunning => "Joining audio with slideshow through ffmpeg";
 }

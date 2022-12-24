@@ -1,4 +1,4 @@
-namespace musicsheetvideo.Frame;
+namespace musicsheetvideo.Timestamp;
 
 public interface IFrameProcessor
 {

@@ -55,6 +55,6 @@ public class Tick : IComparable
 
     public override string ToString()
     {
-        return $"[{_minutes}:{_seconds}:{_milliseconds}]";
+        return $"{_minutes}'{_seconds}\"{_milliseconds}\"\"\"";
     }
 }

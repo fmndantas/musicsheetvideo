@@ -1,14 +1,14 @@
-using musicsheetvideo.Timestamp;
-
-namespace musicsheetvideo.Frame;
+namespace musicsheetvideo.Timestamp;
 
 public class FrameProcessor : IFrameProcessor
 {
     private readonly IIntervalProcessor _intervalProcessor;
+    private readonly IProgressNotification _progressNotification;
 
-    public FrameProcessor(IIntervalProcessor intervalProcessor)
+    public FrameProcessor(IIntervalProcessor intervalProcessor, IProgressNotification progressNotification)
     {
         _intervalProcessor = intervalProcessor;
+        _progressNotification = progressNotification;
     }
 
     public List<Frame> ProcessFrames(List<Frame> frames)
@@ -19,9 +19,12 @@ public class FrameProcessor : IFrameProcessor
         var treatedIntervals = _intervalProcessor.ProcessIntervals(intervals);
         var treatedFrames = new List<Frame>();
         var i = 0;
+        _progressNotification.NotifyProgress("Generating frames");
         foreach (var filledInterval in treatedIntervals)
         {
-            treatedFrames.Add(new Frame(filledInterval, filledInterval.FillingGap ? -1 : frames[i++].PageNumber));
+            var frame = new Frame(filledInterval, filledInterval.FillingGap ? Frame.PageToFillingFrame : frames[i++].PageNumber);
+            treatedFrames.Add(frame);
+            _progressNotification.NotifyProgress($"Generated frame: {frame}");
         }
 
         return treatedFrames;

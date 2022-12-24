@@ -4,22 +4,23 @@ namespace musicsheetvideo.PdfConverter;
 
 public class ImagemagickPdfConverter : IPdfConverter
 {
-    private readonly ShellCommand _command;
-    private readonly MusicSheetVideoConfiguration _configuration;
+    private readonly ICommand _command;
+    private readonly IProgressNotification _progressNotification;
 
-    public ImagemagickPdfConverter(MusicSheetVideoConfiguration configuration)
+    public ImagemagickPdfConverter(IProgressNotification progressNotification, ICommand command)
     {
-        _configuration = configuration;
-        _command = new ImagemagickPdfConversionCommand(configuration);
+        _command = command;
+        _progressNotification = progressNotification;
     }
 
-    public void ConvertPdfToImages()
+    public void ConvertPdfToImages(MusicSheetVideoConfiguration configuration)
     {
-        if (!Directory.Exists(_configuration.ImagesPath))
+        if (!Directory.Exists(configuration.ImagesPath))
         {
-            Directory.CreateDirectory(_configuration.ImagesPath);
+            Directory.CreateDirectory(configuration.ImagesPath);
         }
 
+        _progressNotification.NotifyProgress($"{_command.DescribeItselfRunning}. Output directory is {configuration.ImagesPath}");
         _command.Do();
     }
 }

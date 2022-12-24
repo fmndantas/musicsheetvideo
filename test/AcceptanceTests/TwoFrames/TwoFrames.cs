@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using musicsheetvideo;
-using musicsheetvideo.Frame;
+using musicsheetvideo.Command;
 using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
+using test.Stubs;
 
 namespace test.AcceptanceTests.TwoFrames;
 
@@ -35,11 +36,16 @@ public class TwoFrames : AcceptanceTestsBase
                     new Tick(0, 10, 0)),
                 1)
         };
+        var progressNotification = new NullProgressNotification();
         StartTest(
             configuration,
-            new ImagemagickPdfConverter(configuration),
-            new FrameProcessor(new IntervalProcessor()),
-            new FfmpegVideoMaker(configuration),
+            new ImagemagickPdfConverter(progressNotification, new ImagemagickPdfConversionCommand(configuration)),
+            new FrameProcessor(new IntervalProcessor(), progressNotification),
+            new FfmpegVideoMaker(
+                new List<ICommand>
+                    { new FfmpegSlideshowCommand(configuration), new FfmpegJoinAudioCommand(configuration) },
+                progressNotification
+            ),
             frames
         );
     }
@@ -57,10 +63,10 @@ public class TwoFrames : AcceptanceTestsBase
     protected override void AnalyseInputFile(string[] lines)
     {
         Assert.AreEqual(6, lines.Length);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-1.jpg")}", lines[0]);
+        Assert.AreEqual($"file {Path.Combine(Configuration.ImagesPath, "page-1.jpg")}", lines[0]);
         Assert.AreEqual($"duration 5.000", lines[1]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[2]);
+        Assert.AreEqual($"file {Path.Combine(Configuration.ImagesPath, "page-0.jpg")}", lines[2]);
         Assert.AreEqual($"duration 5.000", lines[3]);
-        Assert.AreEqual($"file {Path.Combine(_configuration.ImagesPath, "page-0.jpg")}", lines[4]);
+        Assert.AreEqual($"file {Path.Combine(Configuration.ImagesPath, "page-0.jpg")}", lines[4]);
     }
 }
