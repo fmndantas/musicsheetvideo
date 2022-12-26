@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace test;
 
+[TestFixture]
 public class TheIntervalProcessor
 {
     private readonly IIntervalProcessor _subject;

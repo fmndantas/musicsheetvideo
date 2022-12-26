@@ -3,18 +3,28 @@ using System.IO;
 using System.Linq;
 using musicsheetvideo;
 using musicsheetvideo.Command;
-using musicsheetvideo.Frame;
 using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
+using test.Stubs;
 
 namespace test.AcceptanceTests;
 
+[TestFixture]
+[Category("integration")]
+[Category("acceptance")]
 public abstract class AcceptanceTestsBase
 {
-    protected MusicSheetVideoConfiguration _configuration;
-    private IVideoProducer _producer;
+    protected const string BasePath = "/home/fernando/Documents/github/musicsheetvideo/test/AcceptanceTests/";
+    protected readonly string DefaultImagePath;
+    protected MusicSheetVideoConfiguration Configuration;
+
+    protected AcceptanceTestsBase()
+    {
+        DefaultImagePath = Path.Combine(BasePath, "Data/default-image.jpg");
+    }
+
     private IIntervalProcessor _intervalProcessor;
     private MusicSheetVideo _app;
     private Frame _lastFrame;
@@ -23,17 +33,16 @@ public abstract class AcceptanceTestsBase
         MusicSheetVideoConfiguration configuration,
         IPdfConverter pdfConverter,
         IFrameProcessor frameProcessor,
-        IVideoProducer videoProducer,
+        IVideoMaker videoMaker,
         List<Frame> frames
     )
     {
         frames.Sort();
         _lastFrame = frames.Last();
-        _configuration = configuration;
-        _producer = videoProducer;
+        Configuration = configuration;
         DeleteGeneratedFiles();
-        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoProducer);
-        _app.MakeVideo(frames);
+        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoMaker, new NullProgressNotification());
+        _app.MakeVideo(frames, configuration);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
         AssertSlideshowWasCorrectlyProduced();
@@ -41,19 +50,34 @@ public abstract class AcceptanceTestsBase
 
     private void DeleteGeneratedFiles()
     {
-        File.Delete(_configuration.InputPath);
-        File.Delete(_configuration.VideoPath);
-        File.Delete(_configuration.FinalVideoPath);
-        foreach (var image in Directory.GetFiles(_configuration.ImagesPath, "*", SearchOption.AllDirectories))
+        if (File.Exists(Configuration.InputPath))
         {
-            File.Delete(image);
+            File.Delete(Configuration.InputPath);
+        }
+
+        if (File.Exists(Configuration.VideoPath))
+        {
+            File.Delete(Configuration.VideoPath);
+        }
+
+        if (File.Exists(Configuration.FinalVideoPath))
+        {
+            File.Delete(Configuration.FinalVideoPath);
+        }
+
+        if (Directory.Exists(Configuration.ImagesPath))
+        {
+            foreach (var image in Directory.GetFiles(Configuration.ImagesPath, "*", SearchOption.AllDirectories))
+            {
+                File.Delete(image);
+            }
         }
     }
 
     private void AssertImagesWereCreatedCorrectly()
     {
-        Assert.True(Directory.Exists(_configuration.ImagesPath));
-        var images = Directory.GetFiles(_configuration.ImagesPath, "*", SearchOption.AllDirectories);
+        Assert.True(Directory.Exists(Configuration.ImagesPath));
+        var images = Directory.GetFiles(Configuration.ImagesPath, "*", SearchOption.AllDirectories);
         Assert.AreEqual(NumberOfExpectedImages(), images.Length);
         var imagesNames = images.Select(x => x.Split("/").Last()).ToArray();
         foreach (var fileName in FileNames())
@@ -64,7 +88,7 @@ public abstract class AcceptanceTestsBase
 
     private void AssertFfmpegInputFileWasCreatedCorrectly()
     {
-        var ffmpegInput = Path.Combine(_configuration.OutputPath, "input.txt");
+        var ffmpegInput = Path.Combine(Configuration.OutputPath, "input.txt");
         Assert.True(File.Exists(ffmpegInput));
         var content = string.Empty;
         try
@@ -83,16 +107,16 @@ public abstract class AcceptanceTestsBase
 
     private void AssertSlideshowWasCorrectlyProduced()
     {
-        var output = Directory.GetFiles(_configuration.OutputPath, "*.mp4",
+        var output = Directory.GetFiles(Configuration.OutputPath, "*.mp4",
             SearchOption.TopDirectoryOnly);
         Assert.AreEqual(2, output.Length);
-        Assert.AreEqual(_configuration.VideoPath, output.First());
+        Assert.AreEqual(Configuration.VideoPath, output.First());
         AssertSlideshowDurationIsCoerent();
     }
 
     private void AssertSlideshowDurationIsCoerent()
     {
-        var command = new FfprobeVideoLengthCommand(_configuration);
+        var command = new FfprobeVideoLengthCommand(Configuration);
         decimal.TryParse(command.Do(), out var lengthDecimal);
         Assert.GreaterOrEqual(lengthDecimal, _lastFrame.EndSecond);
     }

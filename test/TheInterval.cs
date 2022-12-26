@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace test;
 
+[TestFixture]
 public class TheInterval
 {
     public static IEnumerable<TestCaseData> OverlappingIntervalsData

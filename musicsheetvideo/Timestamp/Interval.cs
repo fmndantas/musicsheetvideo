@@ -61,4 +61,9 @@ public class Interval : IComparable
         if (otherInterval == null) throw new Exception("Object is not a Interval");
         return _start.CompareTo(otherInterval._start);
     }
+
+    public override string ToString()
+    {
+        return $"[Start={_start}->End={_end}]";
+    }
 }

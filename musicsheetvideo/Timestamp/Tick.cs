@@ -2,30 +2,30 @@ namespace musicsheetvideo.Timestamp;
 
 public class Tick : IComparable
 {
-    public int Minutes { get; }
-    public int Seconds { get; }
-    public int Milisseconds { get; }
+    private readonly int _minutes;
+    private readonly int _seconds;
+    private readonly int _milliseconds;
 
-    public Tick(int minutes, int seconds, int milisseconds)
+    public Tick(int minutes, int seconds, int milliseconds)
     {
-        Minutes = minutes;
-        Seconds = seconds;
-        Milisseconds = milisseconds;
+        _minutes = minutes;
+        _seconds = seconds;
+        _milliseconds = milliseconds;
     }
 
     private Tick Delta(Tick otherTick)
     {
         return new Tick(
-            otherTick.Minutes - Minutes,
-            otherTick.Seconds - Seconds,
-            otherTick.Milisseconds - Milisseconds
+            otherTick._minutes - _minutes,
+            otherTick._seconds - _seconds,
+            otherTick._milliseconds - _milliseconds
         );
     }
 
     public long DeltaMilisseconds(Tick otherTick)
     {
         var delta = Delta(otherTick);
-        return 60000 * delta.Minutes + 1000 * delta.Seconds + delta.Milisseconds;
+        return 60000 * delta._minutes + 1000 * delta._seconds + delta._milliseconds;
     }
 
     public long DurationMilissecondsToZero
@@ -40,21 +40,21 @@ public class Tick : IComparable
             throw new Exception("Object is not a Tick");
         }
 
-        if (Minutes == otherTick.Minutes)
+        if (_minutes == otherTick._minutes)
         {
-            if (Seconds == otherTick.Seconds)
+            if (_seconds == otherTick._seconds)
             {
-                return Milisseconds.CompareTo(otherTick.Milisseconds);
+                return _milliseconds.CompareTo(otherTick._milliseconds);
             }
 
-            return Seconds.CompareTo(otherTick.Seconds);
+            return _seconds.CompareTo(otherTick._seconds);
         }
 
-        return Minutes.CompareTo(otherTick.Minutes);
+        return _minutes.CompareTo(otherTick._minutes);
     }
 
     public override string ToString()
     {
-        return $"[{Minutes}:{Seconds}:{Milisseconds}]";
+        return $"{_minutes}'{_seconds}\"{_milliseconds}\"\"\"";
     }
 }

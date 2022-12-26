@@ -6,6 +6,11 @@ public class IntervalProcessor : IIntervalProcessor
 {
     public List<Interval> ProcessIntervals(List<Interval> intervals)
     {
+        if (intervals.Count == 0)
+        {
+            return intervals;
+        }
+
         intervals.Sort();
         AssertAllIntervalsAreNonOverlapping(intervals);
         var processedIntervals = new List<Interval>();
