@@ -11,6 +11,7 @@ public class FfmpegJoinAudioCommand : ShellCommand
 
     protected override string Arguments => "-hide_banner -loglevel error -y " +
                                            $"-i {Configuration.VideoPath} " +
+                                           $"-i {Configuration.AudioPath} " +
                                            $"-shortest {Configuration.FinalVideoPath}";
 
     protected override void DescribeItselfRunning()
