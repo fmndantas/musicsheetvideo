@@ -15,6 +15,6 @@ public class FfmpegJoinAudioCommand : ShellCommand
 
     protected override void DescribeItselfRunning()
     {
-        ProgressNotification.NotifyProgress("Joining audio with slideshow through ffmpeg");
+        ProgressNotification.NotifyProgress($"Joining audio with slideshow through ffmpeg. Output path is \"{Configuration.FinalVideoPath}\"");
     }
 }

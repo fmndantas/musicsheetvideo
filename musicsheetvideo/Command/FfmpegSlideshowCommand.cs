@@ -15,6 +15,6 @@ public class FfmpegSlideshowCommand : ShellCommand
 
     protected override void DescribeItselfRunning()
     {
-        ProgressNotification.NotifyProgress("Producing slideshow through ffmpeg");
+        ProgressNotification.NotifyProgress($"Producing slideshow through ffmpeg. Output path is \"{Configuration.VideoPath}\"");
     }
 }
