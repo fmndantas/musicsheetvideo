@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Logging;
 using musicsheetvideo;
 using musicsheetvideo.Command;
 using musicsheetvideo.PdfConverter;
