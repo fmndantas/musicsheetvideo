@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Moq;
 using musicsheetvideo;
 using musicsheetvideo.Command;
@@ -23,7 +22,7 @@ public class TheFfmpegVideoMake
     }
 
     [Test]
-    public void NotifiesFramesTranslationIntoTheFfmpegFiles()
+    public void NotifiesFramesTranslationIntoTheFfmpegInputFile()
     {
         var configuration = new MusicSheetVideoConfiguration("", "", "", "", "", "");
         var oneFrame = new Frame(new Interval(new Tick(0, 0, 0), new Tick(0, 0, 0)), 0);
