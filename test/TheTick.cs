@@ -18,21 +18,12 @@ public class TheTick
     {
         get
         {
-            yield return new TestCaseData(
-                new Tick(0, 5, 0),
-                new Tick(0, 5, 0),
-                0
-            );
-            yield return new TestCaseData(
-                new Tick(0, 0, 0),
-                new Tick(0, 10, 0),
-                10000
-            );
-            yield return new TestCaseData(
-                new Tick(0, 5, 0),
-                new Tick(1, 6, 1),
-                61001
-            );
+            yield return new TestCaseData(new Tick(0, 5, 0), new Tick(0, 5, 0), 0);
+            yield return new TestCaseData(new Tick(0, 0, 0), new Tick(0, 10, 0), 10000);
+            yield return new TestCaseData(new Tick(0, 5, 0), new Tick(1, 6, 1), 61001);
+            yield return new TestCaseData(new Tick(0, 1, 1), new Tick(0, 1, 7), 6);
+            yield return new TestCaseData(new Tick(0, 1, 1), new Tick(0, 1, 0), -1);
+            yield return new TestCaseData(new Tick(1, 6, 1), new Tick(0, 5, 0), -61001);
         }
     }
 
