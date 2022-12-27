@@ -14,7 +14,6 @@ public abstract class ShellCommand : ICommand
     }
 
     protected MusicSheetVideoConfiguration Configuration { get; }
-
     protected abstract string CommandName { get; }
     protected abstract string Arguments { get; }
     public string Command => $"{CommandName} {Arguments}";
