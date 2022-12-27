@@ -14,6 +14,6 @@ public class FfprobeVideoLengthCommand : ShellCommand
 
     protected override void DescribeItselfRunning()
     {
-        ProgressNotification.NotifyProgress("Testing video lenght through ffmpeg");
+        ProgressNotification.NotifyProgress("Testing video length through ffmpeg");
     }
 }
