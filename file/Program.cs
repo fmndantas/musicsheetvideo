@@ -12,16 +12,13 @@ using Serilog.Core;
 var inputFilePath = "";
 var parserResult = Parser.Default.ParseArguments<ParserOptions>(args).WithParsed(o => { inputFilePath = o.FilePath; });
 
-if (parserResult.Errors.Any())
-{
-    var message = string.Join(",", parserResult.Errors.Select(x => x.ToString()));
-    Console.WriteLine(message);
-    return;
-}
+var logger = new SerilogProgressNotification();
+
+if (parserResult.Errors.Any()) return;
 
 if (!File.Exists(inputFilePath))
 {
-    Console.WriteLine($"Inexistent file {inputFilePath}");
+    logger.NotifyError($"Inexistent file {inputFilePath}");
     return;
 }
 
@@ -30,17 +27,17 @@ var inputFileJson = JsonConvert.DeserializeObject<ConfigurationDto>(inputFile);
 
 if (inputFileJson == null)
 {
-    Console.WriteLine("Input file was not parsed correctly");
+    logger.NotifyError("Input file was not parsed correctly");
     return;
 }
 
 if (!inputFileJson.Valid)
 {
     var validation = inputFileJson.Validate();
-    Console.WriteLine("Some errors were found on input file:");
+    logger.NotifyError("Some errors were found on input file:");
     foreach (var error in validation)
     {
-        Console.WriteLine($"    - {error}");
+        logger.NotifyError($"    - {error}");
     }
 
     return;
@@ -55,15 +52,14 @@ var configurationBuilder = MusicSheetConfigurationBuilder
 
 var configuration = configurationBuilder.Build();
 
-var serilogProgressNotification = new SerilogProgressNotification();
 var entrypoint = new Entrypoint(
-    new ImagemagickPdfConverter(serilogProgressNotification, new ImagemagickPdfConversionCommand(configuration)),
-    new FrameProcessor(new IntervalProcessor(), serilogProgressNotification),
+    new ImagemagickPdfConverter(logger, new ImagemagickPdfConversionCommand(configuration)),
+    new FrameProcessor(new IntervalProcessor(), logger),
     new FfmpegVideoMaker(
         new List<ICommand> { new FfmpegSlideshowCommand(configuration), new FfmpegJoinAudioCommand(configuration) },
-        serilogProgressNotification
+        logger
     ),
-    serilogProgressNotification
+    logger
 );
 entrypoint.MakeVideo(inputFileJson.DomainFrames, configuration);
 
@@ -79,5 +75,10 @@ class SerilogProgressNotification : IProgressNotification
     public void NotifyProgress(string message)
     {
         _delegate.Information(message);
+    }
+
+    public void NotifyError(string message)
+    {
+        _delegate.Error(message);
     }
 }
