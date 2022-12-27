@@ -9,12 +9,12 @@ using NUnit.Framework;
 namespace test;
 
 [TestFixture]
-public class TheFfmpegVideoMake
+public class TheFfmpegVideoMaker
 {
     private readonly FfmpegVideoMaker _subject;
     private readonly Mock<IProgressNotification> _mockProgressNotification;
 
-    public TheFfmpegVideoMake()
+    public TheFfmpegVideoMaker()
     {
         var commands = new List<ICommand>();
         _mockProgressNotification = new Mock<IProgressNotification>();
