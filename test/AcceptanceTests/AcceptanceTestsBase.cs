@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Castle.Core.Logging;
 using musicsheetvideo;
 using musicsheetvideo.Command;
 using musicsheetvideo.PdfConverter;
@@ -116,7 +117,7 @@ public abstract class AcceptanceTestsBase
 
     private void AssertSlideshowDurationIsCoerent()
     {
-        var command = new FfprobeVideoLengthCommand(Configuration);
+        var command = new FfprobeVideoLengthCommand(Configuration, new NullProgressNotification());
         decimal.TryParse(command.Do(), out var lengthDecimal);
         Assert.GreaterOrEqual(lengthDecimal, _lastFrame.EndSecond);
     }

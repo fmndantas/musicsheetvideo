@@ -2,12 +2,18 @@ namespace musicsheetvideo.Command;
 
 public class FfprobeVideoLengthCommand : ShellCommand
 {
-    public FfprobeVideoLengthCommand(MusicSheetVideoConfiguration configuration) : base(
-        "ffprobe",
-        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {configuration.VideoPath}"
-    )
+    public FfprobeVideoLengthCommand(MusicSheetVideoConfiguration configuration,
+        IProgressNotification progressNotification) : base(configuration, progressNotification)
     {
     }
 
-    public override string DescribeItselfRunning => "Testing video lenght through ffmpeg";
+    protected override string CommandName => "ffprobe";
+
+    protected override string Arguments =>
+        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {Configuration.VideoPath}";
+
+    protected override void DescribeItselfRunning()
+    {
+        ProgressNotification.NotifyProgress("Testing video lenght through ffmpeg");
+    }
 }

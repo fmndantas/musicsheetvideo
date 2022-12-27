@@ -5,34 +5,37 @@ namespace musicsheetvideo.Command;
 
 public abstract class ShellCommand : ICommand
 {
-    private readonly string _command;
-    private readonly string _arguments;
+    protected readonly IProgressNotification ProgressNotification;
 
-    protected ShellCommand(string command, string arguments)
+    protected ShellCommand(MusicSheetVideoConfiguration configuration, IProgressNotification progressNotification)
     {
-        _command = command;
-        _arguments = arguments;
+        Configuration = configuration;
+        ProgressNotification = progressNotification;
     }
 
-    public string Command => $"{_command} {_arguments}";
+    protected MusicSheetVideoConfiguration Configuration { get; }
+
+    protected abstract string CommandName { get; }
+    protected abstract string Arguments { get; }
+    public string Command => $"{CommandName} {Arguments}";
 
     public string Do()
     {
-        var startInfo = new ProcessStartInfo(_command)
+        DescribeItselfRunning();
+        var startInfo = new ProcessStartInfo(CommandName)
         {
-            Arguments = _arguments,
+            Arguments = Arguments,
             RedirectStandardOutput = true,
             RedirectStandardError = true
         };
         using var process = new Process();
-        process.StartInfo = startInfo;
         var output = string.Empty;
-        var error = string.Empty;
         try
         {
+            process.StartInfo = startInfo;
             process.Start();
             output = process.StandardOutput.ReadToEnd();
-            error = process.StandardError.ReadToEnd();
+            var error = process.StandardError.ReadToEnd();
             if (error.Length > 0)
             {
                 throw new Exception(error);
@@ -44,9 +47,13 @@ public abstract class ShellCommand : ICommand
         {
             throw new ShellCommandExecutionException(ex.Message);
         }
+        finally
+        {
+            process.Dispose();
+        }
 
         return output;
     }
 
-    public abstract string DescribeItselfRunning { get; }
+    protected abstract void DescribeItselfRunning();
 }

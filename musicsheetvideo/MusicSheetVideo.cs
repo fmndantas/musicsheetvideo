@@ -26,10 +26,10 @@ public class MusicSheetVideo
 
     public void MakeVideo(List<Frame> frames, MusicSheetVideoConfiguration configuration)
     {
-        _progressNotification.NotifyProgress("Start of video processing");
+        _progressNotification.NotifyProgress("Starting video making");
         _pdfConverter.ConvertPdfToImages(configuration);
         _videoMaker.MakeVideo(_frameProcessor.ProcessFrames(frames), configuration);
-        _progressNotification.NotifyProgress("End of video processing");
+        _progressNotification.NotifyProgress("Done");
         _progressNotification.NotifyProgress($"Video path is {configuration.FinalVideoPath}");
     }
 }

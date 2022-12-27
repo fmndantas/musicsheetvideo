@@ -64,6 +64,6 @@ public class Interval : IComparable
 
     public override string ToString()
     {
-        return $"[Start={_start}->End={_end}]";
+        return $"[Start={_start} End={_end}]";
     }
 }

@@ -5,12 +5,10 @@ namespace musicsheetvideo.PdfConverter;
 public class ImagemagickPdfConverter : IPdfConverter
 {
     private readonly ICommand _command;
-    private readonly IProgressNotification _progressNotification;
 
-    public ImagemagickPdfConverter(IProgressNotification progressNotification, ICommand command)
+    public ImagemagickPdfConverter(ICommand command)
     {
         _command = command;
-        _progressNotification = progressNotification;
     }
 
     public void ConvertPdfToImages(MusicSheetVideoConfiguration configuration)
@@ -20,7 +18,6 @@ public class ImagemagickPdfConverter : IPdfConverter
             Directory.CreateDirectory(configuration.ImagesPath);
         }
 
-        _progressNotification.NotifyProgress($"{_command.DescribeItselfRunning}. Output directory is {configuration.ImagesPath}");
         _command.Do();
     }
 }

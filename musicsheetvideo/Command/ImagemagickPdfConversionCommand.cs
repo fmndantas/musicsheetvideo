@@ -2,15 +2,18 @@ namespace musicsheetvideo.Command;
 
 public class ImagemagickPdfConversionCommand : ShellCommand
 {
-    public ImagemagickPdfConversionCommand(MusicSheetVideoConfiguration configuration) : base(
-        "convert",
-        "-density 300 " +
-        configuration.PdfPath + " " +
-        "-quality 100 " +
-        $"{configuration.ImagesPath}/{configuration.ImagePrefix}-%d.{configuration.ImageFormat}"
-    )
+    public ImagemagickPdfConversionCommand(MusicSheetVideoConfiguration configuration,
+        IProgressNotification progressNotification) : base(configuration, progressNotification)
     {
     }
 
-    public override string DescribeItselfRunning => "Converting .pdf to images through Imagemagick";
+    protected override string CommandName => "convert";
+
+    protected override string Arguments => $"-density 300 {Configuration.PdfPath} -quality 100 " +
+                                           $"{Configuration.ImagesPath}/{Configuration.ImagePrefix}-%d.{Configuration.ImageFormat}";
+
+    protected override void DescribeItselfRunning()
+    {
+        ProgressNotification.NotifyProgress($"Converting .pdf to images through Imagemagick. Output path is \"{Configuration.ImagesPath}\"");
+    }
 }

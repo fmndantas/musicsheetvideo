@@ -31,15 +31,15 @@ public class OneFrame : AcceptanceTestsBase
                 ),
                 1),
         };
-        var progressNotification = new NullProgressNotification();
+        var logger = new NullProgressNotification();
         StartTest(
             configuration,
-            new ImagemagickPdfConverter(progressNotification, new ImagemagickPdfConversionCommand(configuration)),
-            new FrameProcessor(new IntervalProcessor(), progressNotification),
+            new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger)),
+            new FrameProcessor(new IntervalProcessor(), logger),
             new FfmpegVideoMaker(
                 new List<ICommand>
-                    { new FfmpegSlideshowCommand(configuration), new FfmpegJoinAudioCommand(configuration) },
-                progressNotification
+                    { new FfmpegSlideshowCommand(configuration, logger), new FfmpegJoinAudioCommand(configuration, logger) },
+                logger
             ),
             frames
         );

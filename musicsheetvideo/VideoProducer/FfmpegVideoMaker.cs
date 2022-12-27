@@ -38,7 +38,6 @@ public class FfmpegVideoMaker : IVideoMaker
         sw.Close();
         foreach (var command in _commands)
         {
-            _progressNotification.NotifyProgress($"{command.DescribeItselfRunning}");
             command.Do();
         }
     }

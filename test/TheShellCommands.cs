@@ -3,16 +3,17 @@ using musicsheetvideo;
 using musicsheetvideo.Command;
 using musicsheetvideo.CustomException;
 using NUnit.Framework;
+using test.Stubs;
 
 namespace test;
 
 [TestFixture]
-public class TheShellCommand
+public class TheShellCommands
 {
     private readonly MusicSheetVideoConfiguration _configuration;
     private ShellCommand? _command;
 
-    public TheShellCommand()
+    public TheShellCommands()
     {
         _configuration = new MusicSheetVideoConfiguration(
             "/home/fernando/tmp/msv/two-pages",
@@ -27,7 +28,7 @@ public class TheShellCommand
     [Test]
     public void FfmpegSlideshowCommandHasContent()
     {
-        _command = new FfmpegSlideshowCommand(_configuration);
+        _command = new FfmpegSlideshowCommand(_configuration, new NullProgressNotification());
         var target = new List<string>
         {
             "ffmpeg", "-y", "-f", "concat", "-safe",
@@ -42,7 +43,7 @@ public class TheShellCommand
     [Test]
     public void FfmpegLengthCommandHasContent()
     {
-        _command = new FfprobeVideoLengthCommand(_configuration);
+        _command = new FfprobeVideoLengthCommand(_configuration, new NullProgressNotification());
         Assert.AreEqual($"ffprobe -v error -show_entries format=duration " +
                         $"-of default=noprint_wrappers=1:nokey=1 {_configuration.VideoPath}",
             _command.Command);
@@ -51,7 +52,7 @@ public class TheShellCommand
     [Test]
     public void ImagemagickCommandHasContent()
     {
-        _command = new ImagemagickPdfConversionCommand(_configuration);
+        _command = new ImagemagickPdfConversionCommand(_configuration, new NullProgressNotification());
         Assert.AreEqual($"convert -density 300 {_configuration.PdfPath} -quality 100 " +
                         $"{_configuration.ImagesPath}/{_configuration.ImagePrefix}-%d.{_configuration.ImageFormat}",
             _command.Command);
