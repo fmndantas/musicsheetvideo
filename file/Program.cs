@@ -9,10 +9,17 @@ using Newtonsoft.Json;
 using Serilog;
 using Serilog.Core;
 
-var inputFilePath = "";
-var parserResult = Parser.Default.ParseArguments<ParserOptions>(args).WithParsed(o => { inputFilePath = o.FilePath; });
-
 var logger = new SerilogProgressNotification();
+
+var inputFilePath = "";
+var debugMode = false;
+var parserResult = Parser.Default.ParseArguments<ParserOptions>(args).WithParsed(o =>
+{
+    inputFilePath = o.FilePath;
+    debugMode = o.DebugMode;
+});
+
+logger.NotifyProgress($"Running in {(debugMode ? "DEBUG" : "COMMON")} mode");
 
 if (parserResult.Errors.Any()) return;
 
@@ -62,7 +69,15 @@ var entrypoint = new Entrypoint(
     ),
     logger
 );
-entrypoint.MakeVideo(inputFileJson.DomainFrames, configuration);
+
+try
+{
+    entrypoint.MakeVideo(inputFileJson.DomainFrames, configuration);
+}
+catch (Exception e)
+{
+    logger.NotifyError(debugMode ? e.ToString() : e.Message);
+}
 
 class SerilogProgressNotification : IProgressNotification
 {
