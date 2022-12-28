@@ -37,25 +37,32 @@ public class TheShellCommands
             "-vsync", "vfr", "-pix_fmt", "yuv420p", "-hide_banner", "-loglevel", "error",
             _configuration.VideoPath
         };
-        Assert.AreEqual(string.Join(" ", target), _command.Command);
+        Assert.That(_command.Command, Is.EqualTo(string.Join(" ", target)));
     }
 
     [Test]
     public void FfmpegLengthCommandHasContent()
     {
         _command = new FfprobeVideoLengthCommand(_configuration, new NullProgressNotification());
-        Assert.AreEqual($"ffprobe -v error -show_entries format=duration " +
-                        $"-of default=noprint_wrappers=1:nokey=1 {_configuration.VideoPath}",
-            _command.Command);
+        Assert.That(_command.Command, Is.EqualTo("ffprobe -v error -show_entries format=duration " +
+                                                 $"-of default=noprint_wrappers=1:nokey=1 {_configuration.VideoPath}"));
     }
 
     [Test]
     public void ImagemagickCommandHasContent()
     {
         _command = new ImagemagickPdfConversionCommand(_configuration, new NullProgressNotification());
-        Assert.AreEqual($"convert -density 300 {_configuration.PdfPath} -quality 100 " +
-                        $"{_configuration.ImagesPath}/{_configuration.ImagePrefix}-%d.{_configuration.ImageFormat}",
-            _command.Command);
+        Assert.That(_command.Command, Is.EqualTo($"convert -density 300 {_configuration.PdfPath} " +
+                                                 $"-quality 100 {_configuration.ImagesPath}/{_configuration.ImagePrefix}-%d.{_configuration.ImageFormat}"));
+    }
+
+    [Test]
+    public void FfmpegJoinAudioCommandHasContent()
+    {
+        _command = new FfmpegJoinAudioCommand(_configuration, new NullProgressNotification());
+        Assert.That(_command.Command, Is.EqualTo("ffmpeg -hide_banner -loglevel error -y " +
+                                                 $"-i {_configuration.VideoPath} -i {_configuration.AudioPath} " +
+                                                 $"-shortest {_configuration.FinalVideoPath}"));
     }
 
 
