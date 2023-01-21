@@ -34,7 +34,7 @@ public class OneFrame : AcceptanceTestsBase
         var logger = new NullProgressNotification();
         StartTest(
             configuration,
-            new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger)),
+            new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger), logger),
             new FrameProcessor(new IntervalProcessor(), logger),
             new FfmpegVideoMaker(
                 new List<ICommand>
