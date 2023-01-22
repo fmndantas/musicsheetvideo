@@ -10,12 +10,12 @@ public class FfmpegJoinAudioCommand : ShellCommand
     protected override string CommandName => "ffmpeg";
 
     protected override string Arguments => "-hide_banner -loglevel error -y " +
-                                           $"-i {Configuration.VideoPath} " +
+                                           $"-i {Configuration.SlideshowVideoPath} " +
                                            $"-i {Configuration.AudioPath} " +
-                                           $"-shortest {Configuration.FinalVideoPath}";
+                                           $"-shortest {Configuration.OutputVideoPath}";
 
     protected override void DescribeItselfRunning()
     {
-        ProgressNotification.NotifyProgress($"Joining audio with slideshow through ffmpeg. Output path is \"{Configuration.FinalVideoPath}\"");
+        ProgressNotification.NotifyProgress($"Joining audio with slideshow through ffmpeg. Output path is \"{Configuration.OutputVideoPath}\"");
     }
 }
