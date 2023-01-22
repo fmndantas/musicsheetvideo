@@ -11,11 +11,11 @@ public class ImagemagickPdfConverter : IPdfConverter
         _command = command;
     }
 
-    public void ConvertPdfToImages(MusicSheetVideoConfiguration configuration)
+    public void ConvertPdfToImages(IPdfConverterConfiguration configuration)
     {
-        if (!Directory.Exists(configuration.ImagesPath))
+        if (!Directory.Exists(configuration.ImagesDirectoryPath))
         {
-            Directory.CreateDirectory(configuration.ImagesPath);
+            Directory.CreateDirectory(configuration.ImagesDirectoryPath);
         }
 
         _command.Do();

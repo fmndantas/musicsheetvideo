@@ -1,3 +1,5 @@
+using musicsheetvideo.Configuration;
+using musicsheetvideo.Configuration.FromAudio;
 using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
@@ -11,10 +13,7 @@ public class MusicSheetVideo
     private readonly IPdfConverter _pdfConverter;
     private readonly IProgressNotification _progressNotification;
 
-    public MusicSheetVideo(
-        IPdfConverter pdfConverter,
-        IFrameProcessor frameProcessor,
-        IVideoMaker videoMaker,
+    public MusicSheetVideo(IPdfConverter pdfConverter, IFrameProcessor frameProcessor, IVideoMaker videoMaker,
         IProgressNotification progressNotification
     )
     {
@@ -24,7 +23,7 @@ public class MusicSheetVideo
         _progressNotification = progressNotification;
     }
 
-    public void MakeVideo(List<Frame> frames, MusicSheetVideoConfiguration configuration)
+    public void MakeVideo(List<Frame> frames, IMusicSheetVideoConfiguration configuration)
     {
         _progressNotification.NotifyProgress("Starting video making");
         _pdfConverter.ConvertPdfToImages(configuration);

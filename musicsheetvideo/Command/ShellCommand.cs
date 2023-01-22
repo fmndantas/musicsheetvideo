@@ -3,15 +3,15 @@ using musicsheetvideo.CustomException;
 
 namespace musicsheetvideo.Command;
 
-public abstract class ShellCommand : ICommand
+public abstract class ShellCommand<T> : ICommand
 {
-    protected ShellCommand(MusicSheetVideoConfiguration configuration, IProgressNotification progressNotification)
+    protected ShellCommand(T configuration, IProgressNotification progressNotification)
     {
         Configuration = configuration;
         ProgressNotification = progressNotification;
     }
 
-    protected MusicSheetVideoConfiguration Configuration { get; }
+    protected T Configuration { get; }
     protected abstract string CommandName { get; }
     protected abstract string Arguments { get; }
     protected readonly IProgressNotification ProgressNotification;
@@ -24,7 +24,7 @@ public abstract class ShellCommand : ICommand
         {
             Arguments = Arguments,
             RedirectStandardOutput = true,
-            RedirectStandardError = true
+            RedirectStandardError = true,
         };
         using var process = new Process();
         var output = string.Empty;

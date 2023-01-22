@@ -1,7 +1,7 @@
 ﻿using CommandLine;
 using file;
 using musicsheetvideo;
-using musicsheetvideo.Command;
+using musicsheetvideo.Command.ImagemagickPdfConversionCommand;
 using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
@@ -25,7 +25,7 @@ if (parserResult.Errors.Any()) return;
 
 if (!File.Exists(inputFilePath))
 {
-    logger.NotifyError($"Inexistent file {inputFilePath}");
+    logger.NotifyError($"Inexistent file \"{inputFilePath}\"");
     return;
 }
 
@@ -50,29 +50,25 @@ if (!inputFileJson.Valid)
     return;
 }
 
-var configurationBuilder = MusicSheetConfigurationBuilder
+var configurationBuilder = MusicSheetVideoConfigurationBuilder
     .OneConfiguration()
     .WithPdfPath(inputFileJson.PdfPath!)
     .WithAudioPath(inputFileJson.AudioPath!)
     .WithOutputPath(inputFileJson.OutputPath!)
     .WithDefaultImagePath(inputFileJson.DefaultImagePath!);
 
-var configuration = configurationBuilder.Build();
-
+var pipelineMaker = new FFmpegPipelineMaker(configurationBuilder, logger);
+var videoMaker = new FfmpegVideoMaker(pipelineMaker.MakePipeline(PipelineMode.Fullscreen), logger);
 var entrypoint = new Entrypoint(
-    new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger)),
+    new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configurationBuilder.BuildImagemagickPdfConversionCommandInput(), logger)),
     new FrameProcessor(new IntervalProcessor(), logger),
-    new FfmpegVideoMaker(
-        new List<ICommand>
-            { new FfmpegSlideshowCommand(configuration, logger), new FfmpegJoinAudioCommand(configuration, logger) },
-        logger
-    ),
+    videoMaker,
     logger
 );
 
 try
 {
-    entrypoint.MakeVideo(inputFileJson.DomainFrames, configuration);
+    entrypoint.MakeVideo(inputFileJson.DomainFrames, configurationBuilder.Build());
 }
 catch (Exception e)
 {
