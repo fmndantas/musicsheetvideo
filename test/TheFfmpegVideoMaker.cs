@@ -24,7 +24,7 @@ public class TheFfmpegVideoMaker
     [Test]
     public void NotifiesFramesTranslationIntoTheFfmpegInputFile()
     {
-        var configuration = new MusicSheetVideoConfiguration("", "", "", "", "", "");
+        var configuration = MusicSheetConfigurationBuilder.OneConfiguration().Build();
         var oneFrame = new Frame(new Interval(new Tick(0, 0, 0), new Tick(0, 0, 0)), 0);
         var frames = new List<Frame> { oneFrame, oneFrame, oneFrame };
         _subject.MakeVideo(frames, configuration);

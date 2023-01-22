@@ -1,6 +1,4 @@
-using musicsheetvideo;
-
-namespace file;
+namespace musicsheetvideo;
 
 public class MusicSheetConfigurationBuilder
 {
