@@ -5,8 +5,6 @@ namespace musicsheetvideo.Command;
 
 public abstract class ShellCommand : ICommand
 {
-    protected readonly IProgressNotification ProgressNotification;
-
     protected ShellCommand(MusicSheetVideoConfiguration configuration, IProgressNotification progressNotification)
     {
         Configuration = configuration;
@@ -16,6 +14,7 @@ public abstract class ShellCommand : ICommand
     protected MusicSheetVideoConfiguration Configuration { get; }
     protected abstract string CommandName { get; }
     protected abstract string Arguments { get; }
+    protected readonly IProgressNotification ProgressNotification;
     public string Command => $"{CommandName} {Arguments}";
 
     public string Do()

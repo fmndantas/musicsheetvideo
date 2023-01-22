@@ -8,7 +8,7 @@ namespace test;
 [TestFixture]
 public class WrongCommand : ShellCommand
 {
-    public WrongCommand() : base(new MusicSheetVideoConfiguration("", "", "", "", "", ""),
+    public WrongCommand() : base(MusicSheetConfigurationBuilder.OneConfiguration().Build(),
         new NullProgressNotification())
     {
     }

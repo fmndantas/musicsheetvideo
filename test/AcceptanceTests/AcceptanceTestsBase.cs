@@ -19,10 +19,12 @@ public abstract class AcceptanceTestsBase
     protected const string BasePath = "/home/fernando/Documents/github/musicsheetvideo/test/AcceptanceTests/";
     protected readonly string DefaultImagePath;
     protected MusicSheetVideoConfiguration Configuration;
+    protected readonly IProgressNotification Logger;
 
     protected AcceptanceTestsBase()
     {
         DefaultImagePath = Path.Combine(BasePath, "Data/default-image.jpg");
+        Logger = new NunitProgressNotification();
     }
 
     private IIntervalProcessor _intervalProcessor;
@@ -37,6 +39,7 @@ public abstract class AcceptanceTestsBase
         List<Frame> frames
     )
     {
+        Logger.NotifyProgress($"Running test case \"{GetType().Name}\"");
         frames.Sort();
         _lastFrame = frames.Last();
         Configuration = configuration;
@@ -46,23 +49,22 @@ public abstract class AcceptanceTestsBase
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
         AssertSlideshowWasCorrectlyProduced();
+        Logger.NotifyProgress("Done\n");
     }
 
     private void DeleteGeneratedFiles()
     {
-        if (File.Exists(Configuration.InputPath))
+        if (File.Exists(Configuration.SlideshowTextInputPath))
         {
-            File.Delete(Configuration.InputPath);
+            File.Delete(Configuration.SlideshowTextInputPath);
         }
 
-        if (File.Exists(Configuration.VideoPath))
+        if (Directory.Exists(Configuration.OutputPath))
         {
-            File.Delete(Configuration.VideoPath);
-        }
-
-        if (File.Exists(Configuration.FinalVideoPath))
-        {
-            File.Delete(Configuration.FinalVideoPath);
+            foreach (var video in Directory.GetFiles(Configuration.OutputPath, "*.mp4", SearchOption.AllDirectories))
+            {
+                File.Delete(video);
+            }
         }
 
         if (Directory.Exists(Configuration.ImagesPath))
@@ -107,10 +109,10 @@ public abstract class AcceptanceTestsBase
 
     private void AssertSlideshowWasCorrectlyProduced()
     {
-        var output = Directory.GetFiles(Configuration.OutputPath, "*.mp4",
-            SearchOption.TopDirectoryOnly);
-        Assert.AreEqual(2, output.Length);
-        Assert.AreEqual(Configuration.VideoPath, output.First());
+        var output = Directory.GetFiles(Configuration.OutputPath, "*.mp4", SearchOption.TopDirectoryOnly);
+        var expectedNumberOfMp4Files = 2;
+        Assert.That(output.Length, Is.EqualTo(expectedNumberOfMp4Files),
+            $"{expectedNumberOfMp4Files} *.mp4 were expected, but {output.Length} were found");
         AssertSlideshowDurationIsCoerent();
     }
 

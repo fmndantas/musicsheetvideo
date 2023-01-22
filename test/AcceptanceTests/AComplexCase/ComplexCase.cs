@@ -6,7 +6,6 @@ using musicsheetvideo.PdfConverter;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using NUnit.Framework;
-using test.Stubs;
 
 namespace test.AcceptanceTests.AComplexCase;
 
@@ -16,14 +15,12 @@ public class ComplexCase : AcceptanceTestsBase
     public void Entrypoint()
     {
         var here = Path.Combine(BasePath, "AComplexCase/Data");
-        var configuration = new MusicSheetVideoConfiguration(
-            here,
-            Path.Combine(here, "pdf.pdf"),
-            Path.Combine(here, "audio.wav"),
-            DefaultImagePath,
-            "page",
-            "jpg"
-        );
+        var configuration = MusicSheetConfigurationBuilder.OneConfiguration()
+            .WithOutputPath(here)
+            .WithPdfPath(Path.Combine(here, "pdf.pdf"))
+            .WithAudioPath(Path.Combine(here, "audio.wav"))
+            .WithDefaultImagePath(DefaultImagePath)
+            .Build();
         var frames = new List<Frame>
         {
             new(new(
@@ -39,15 +36,16 @@ public class ComplexCase : AcceptanceTestsBase
                 new Tick(0, 40, 0)
             ), 3)
         };
-        var logger = new NullProgressNotification();
         StartTest(
             configuration,
-            new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger)),
-            new FrameProcessor(new IntervalProcessor(), logger),
+            new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, Logger)),
+            new FrameProcessor(new IntervalProcessor(), Logger),
             new FfmpegVideoMaker(
                 new List<ICommand>
-                    { new FfmpegSlideshowCommand(configuration, logger), new FfmpegJoinAudioCommand(configuration, logger) },
-                logger
+                {
+                    new FfmpegSlideshowCommand(configuration, Logger), new FfmpegJoinAudioCommand(configuration, Logger)
+                },
+                Logger
             ),
             frames
         );
