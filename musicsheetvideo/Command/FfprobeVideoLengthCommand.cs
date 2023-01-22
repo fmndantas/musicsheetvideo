@@ -10,7 +10,7 @@ public class FfprobeVideoLengthCommand : ShellCommand
     protected override string CommandName => "ffprobe";
 
     protected override string Arguments =>
-        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {Configuration.VideoPath}";
+        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {Configuration.SlideshowVideoPath}";
 
     protected override void DescribeItselfRunning()
     {

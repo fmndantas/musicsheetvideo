@@ -9,9 +9,9 @@ public class MusicSheetVideoConfiguration
     public string ImagePrefix { get; }
     public string ImageFormat { get; }
     public string ImagesPath => Path.Combine(OutputPath, "images");
-    public string InputPath => Path.Combine(OutputPath, "input.txt");
-    public string VideoPath => Path.Combine(OutputPath, "output.mp4");
-    public string FinalVideoPath => Path.Combine(OutputPath, "final-output.mp4");
+    public string SlideshowTextInputPath => Path.Combine(OutputPath, "input.txt");
+    public string SlideshowVideoPath => Path.Combine(OutputPath, "slideshow.mp4");
+    public string OutputVideoPath => Path.Combine(OutputPath, "output.mp4");
 
     public MusicSheetVideoConfiguration(
         string outputPath,

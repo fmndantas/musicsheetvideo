@@ -9,12 +9,12 @@ public class FfmpegSlideshowCommand : ShellCommand
 
     protected override string CommandName => "ffmpeg";
 
-    protected override string Arguments => $"-y -f concat -safe 0 -i {Configuration.InputPath} " +
+    protected override string Arguments => $"-y -f concat -safe 0 -i {Configuration.SlideshowTextInputPath} " +
                                            "-vf \"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2,setsar=1\" " +
-                                           $"-vsync vfr -pix_fmt yuv420p -hide_banner -loglevel error {Configuration.VideoPath}";
+                                           $"-vsync vfr -pix_fmt yuv420p -hide_banner -loglevel error {Configuration.SlideshowVideoPath}";
 
     protected override void DescribeItselfRunning()
     {
-        ProgressNotification.NotifyProgress($"Producing slideshow through ffmpeg. Output path is \"{Configuration.VideoPath}\"");
+        ProgressNotification.NotifyProgress($"Producing slideshow through ffmpeg. Output path is \"{Configuration.SlideshowVideoPath}\"");
     }
 }

@@ -16,9 +16,9 @@ public class FfmpegVideoMaker : IVideoMaker
 
     public void MakeVideo(List<Frame> frames, MusicSheetVideoConfiguration configuration)
     {
-        using var sw = new StreamWriter(configuration.InputPath);
+        using var sw = new StreamWriter(configuration.SlideshowTextInputPath);
         _progressNotification.NotifyProgress(
-            $"Producing ffmepg text file. Output path is {configuration.InputPath}");
+            $"Producing ffmepg text file. Output path is {configuration.SlideshowTextInputPath}");
         foreach (var frame in frames)
         {
             _progressNotification.NotifyProgress($"Processing frame {frame}");
