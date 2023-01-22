@@ -1,8 +1,8 @@
-namespace musicsheetvideo.Command;
+namespace musicsheetvideo.Command.ImagemagickPdfConversionCommand;
 
-public class ImagemagickPdfConversionCommand : ShellCommand
+public class ImagemagickPdfConversionCommand : ShellCommand<ImagemagickPdfConversionCommandInput>
 {
-    public ImagemagickPdfConversionCommand(MusicSheetVideoConfiguration configuration,
+    public ImagemagickPdfConversionCommand(ImagemagickPdfConversionCommandInput configuration,
         IProgressNotification progressNotification) : base(configuration, progressNotification)
     {
     }

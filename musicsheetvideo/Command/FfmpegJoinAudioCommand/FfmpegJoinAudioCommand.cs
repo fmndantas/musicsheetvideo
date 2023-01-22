@@ -1,8 +1,8 @@
-namespace musicsheetvideo.Command;
+namespace musicsheetvideo.Command.FfmpegJoinAudioCommand;
 
-public class FfmpegJoinAudioCommand : ShellCommand
+public class FfmpegJoinAudioCommand : ShellCommand<FfmpegJoinAudioCommandInput>
 {
-    public FfmpegJoinAudioCommand(MusicSheetVideoConfiguration configuration,
+    public FfmpegJoinAudioCommand(FfmpegJoinAudioCommandInput configuration,
         IProgressNotification progressNotification) : base(configuration, progressNotification)
     {
     }
@@ -10,7 +10,7 @@ public class FfmpegJoinAudioCommand : ShellCommand
     protected override string CommandName => "ffmpeg";
 
     protected override string Arguments => "-hide_banner -loglevel error -y " +
-                                           $"-i {Configuration.SlideshowVideoPath} " +
+                                           $"-i {Configuration.InputVideoPath} " +
                                            $"-i {Configuration.AudioPath} " +
                                            $"-shortest {Configuration.OutputVideoPath}";
 

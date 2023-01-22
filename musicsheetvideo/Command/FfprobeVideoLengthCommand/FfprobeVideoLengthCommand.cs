@@ -1,8 +1,8 @@
-namespace musicsheetvideo.Command;
+namespace musicsheetvideo.Command.FfprobeVideoLengthCommand;
 
-public class FfprobeVideoLengthCommand : ShellCommand
+public class FfprobeVideoLengthCommand : ShellCommand<FfprobeVideoLengthCommandInput>
 {
-    public FfprobeVideoLengthCommand(MusicSheetVideoConfiguration configuration,
+    public FfprobeVideoLengthCommand(FfprobeVideoLengthCommandInput configuration,
         IProgressNotification progressNotification) : base(configuration, progressNotification)
     {
     }
@@ -10,7 +10,7 @@ public class FfprobeVideoLengthCommand : ShellCommand
     protected override string CommandName => "ffprobe";
 
     protected override string Arguments =>
-        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {Configuration.SlideshowVideoPath}";
+        $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 {Configuration.InputVideoPath}";
 
     protected override void DescribeItselfRunning()
     {
