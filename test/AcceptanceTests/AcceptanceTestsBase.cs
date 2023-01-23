@@ -65,7 +65,7 @@ public abstract class AcceptanceTestsBase
         {
             foreach (var video in Directory.GetFiles(Configuration.OutputPath, "*.mp4", SearchOption.AllDirectories))
             {
-                // pattern used in integration tests with video input
+                // video input name pattern used in integration tests
                 if (!video.Contains("input.mp4"))
                 {
                     File.Delete(video);

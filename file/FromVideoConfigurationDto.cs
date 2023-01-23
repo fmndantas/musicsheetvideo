@@ -1,17 +1,16 @@
+using musicsheetvideo.Configuration.FromVideo;
 using musicsheetvideo.Timestamp;
 
 namespace file;
 
-public class ConfigurationDto
+public class FromVideoConfigurationDto
 {
     public string? PdfPath { get; set; }
-    public string? AudioPath { get; set; }
+    public string? InputVideoPath { get; set; }
     public string? OutputPath { get; set; }
     public string? DefaultImagePath { get; set; }
     public List<FrameDto>? Frames { get; set; }
-
     public bool Valid => !Validate().Any();
-
     public List<string> Validate()
     {
         var errors = new List<string>();
@@ -20,9 +19,9 @@ public class ConfigurationDto
             errors.Add("pdfPath was not passed");
         }
 
-        if (string.IsNullOrEmpty(AudioPath))
+        if (string.IsNullOrEmpty(InputVideoPath))
         {
-            errors.Add("audioPath was not passed");
+            errors.Add("inputVideoPath was not passed");
         }
 
         if (string.IsNullOrEmpty(DefaultImagePath))
@@ -52,4 +51,14 @@ public class ConfigurationDto
     }
 
     public List<Frame> DomainFrames => Frames!.Select(x => x.TryGetDomainFrame()).ToList();
+
+    public FromVideoConfigurationBuilder GetConfiguration()
+    {
+        return FromVideoConfigurationBuilder
+            .OneConfiguration()
+            .WithPdfPath(PdfPath!)
+            .WithInputVideoPath(InputVideoPath!)
+            .WithOutputPath(OutputPath!)
+            .WithDefaultImagePath(DefaultImagePath!);
+    }
 }
