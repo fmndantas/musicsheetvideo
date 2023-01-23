@@ -2,24 +2,27 @@
 using file;
 using musicsheetvideo;
 using musicsheetvideo.Command.ImagemagickPdfConversionCommand;
+using musicsheetvideo.Configuration;
 using musicsheetvideo.PdfConverter;
+using musicsheetvideo.Pipeline;
 using musicsheetvideo.Timestamp;
 using musicsheetvideo.VideoProducer;
 using Newtonsoft.Json;
-using Serilog;
-using Serilog.Core;
 
 var logger = new SerilogProgressNotification();
 
 var inputFilePath = "";
 var debugMode = false;
+var mode = "";
 var parserResult = Parser.Default.ParseArguments<ParserOptions>(args).WithParsed(o =>
 {
     inputFilePath = o.FilePath;
     debugMode = o.DebugMode;
+    mode = o.Mode;
 });
 
 logger.NotifyProgress($"Running in {(debugMode ? "DEBUG" : "COMMON")} mode");
+logger.NotifyProgress($"Using \"{mode}\" mode");
 
 if (parserResult.Errors.Any()) return;
 
@@ -29,68 +32,102 @@ if (!File.Exists(inputFilePath))
     return;
 }
 
-var inputFile = File.ReadAllText(inputFilePath);
-var inputFileJson = JsonConvert.DeserializeObject<ConfigurationDto>(inputFile);
+MusicSheetVideo maker = null!;
+IMusicSheetVideoConfiguration configuration = null!;
+var frames = new List<Frame>();
 
-if (inputFileJson == null)
+void SetupForAudioMode()
 {
-    logger.NotifyError("Input file was not parsed correctly");
-    return;
-}
-
-if (!inputFileJson.Valid)
-{
-    var validation = inputFileJson.Validate();
-    logger.NotifyError("Some errors were found on input file:");
-    foreach (var error in validation)
+    var inputFile = File.ReadAllText(inputFilePath);
+    var inputFileJson = JsonConvert.DeserializeObject<FromAudioConfigurationDto>(inputFile);
+    if (inputFileJson == null)
     {
-        logger.NotifyError($"    - {error}");
+        logger.NotifyError("Input file was not parsed correctly");
+        return;
     }
 
-    return;
+    if (!inputFileJson.Valid)
+    {
+        var validation = inputFileJson.Validate();
+        logger.NotifyError("Some errors were found on input file:");
+        foreach (var error in validation)
+        {
+            logger.NotifyError($"    - {error}");
+        }
+
+        return;
+    }
+
+    var configurationBuilder = inputFileJson.GetConfiguration();
+    configuration = configurationBuilder.Build();
+    frames = inputFileJson.DomainFrames;
+    var pipeline = new FfmpegFromAudioPipelineMaker(configurationBuilder, logger).MakePipeline();
+    maker = new MusicSheetVideo(
+        new ImagemagickPdfConverter(
+            new ImagemagickPdfConversionCommand(
+                configurationBuilder.BuildImagemagickPdfConversionCommandInput(),
+                logger
+            )
+        ),
+        new FrameProcessor(new IntervalProcessor(), logger),
+        new FfmpegVideoMaker(pipeline, logger),
+        logger
+    );
 }
 
-var configurationBuilder = MusicSheetVideoConfigurationBuilder
-    .OneConfiguration()
-    .WithPdfPath(inputFileJson.PdfPath!)
-    .WithAudioPath(inputFileJson.AudioPath!)
-    .WithOutputPath(inputFileJson.OutputPath!)
-    .WithDefaultImagePath(inputFileJson.DefaultImagePath!);
+void SetupForVideoMode()
+{
+    var inputFile = File.ReadAllText(inputFilePath);
+    var inputFileJson = JsonConvert.DeserializeObject<FromVideoConfigurationDto>(inputFile);
+    if (inputFileJson == null)
+    {
+        logger.NotifyError("Input file was not parsed correctly");
+        return;
+    }
 
-var pipelineMaker = new FFmpegPipelineMaker(configurationBuilder, logger);
-var videoMaker = new FfmpegVideoMaker(pipelineMaker.MakePipeline(PipelineMode.Fullscreen), logger);
-var entrypoint = new Entrypoint(
-    new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configurationBuilder.BuildImagemagickPdfConversionCommandInput(), logger)),
-    new FrameProcessor(new IntervalProcessor(), logger),
-    videoMaker,
-    logger
-);
+    if (!inputFileJson.Valid)
+    {
+        var validation = inputFileJson.Validate();
+        logger.NotifyError("Some errors were found on input file:");
+        foreach (var error in validation)
+        {
+            logger.NotifyError($"    - {error}");
+        }
+
+        return;
+    }
+
+    var configurationBuilder = inputFileJson.GetConfiguration();
+    configuration = configurationBuilder.Build();
+    frames = inputFileJson.DomainFrames;
+    var pipeline = new FfmpegFromVideoPipelineMaker(configurationBuilder, logger).MakePipeline();
+    maker = new MusicSheetVideo(
+        new ImagemagickPdfConverter(
+            new ImagemagickPdfConversionCommand(
+                configurationBuilder.BuildImagemagickPdfConversionCommandInput(),
+                logger
+            )
+        ),
+        new FrameProcessor(new IntervalProcessor(), logger),
+        new FfmpegVideoMaker(pipeline, logger),
+        logger
+    );
+}
+
+if (mode == "a")
+{
+    SetupForAudioMode();
+}
+else
+{
+    SetupForVideoMode();
+}
 
 try
 {
-    entrypoint.MakeVideo(inputFileJson.DomainFrames, configurationBuilder.Build());
+    maker.MakeVideo(frames, configuration);
 }
 catch (Exception e)
 {
     logger.NotifyError(debugMode ? e.ToString() : e.Message);
-}
-
-class SerilogProgressNotification : IProgressNotification
-{
-    private readonly Logger _delegate;
-
-    public SerilogProgressNotification()
-    {
-        _delegate = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-    }
-
-    public void NotifyProgress(string message)
-    {
-        _delegate.Information(message);
-    }
-
-    public void NotifyError(string message)
-    {
-        _delegate.Error(message);
-    }
 }

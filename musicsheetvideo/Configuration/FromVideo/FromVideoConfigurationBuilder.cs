@@ -20,8 +20,8 @@ public class FromVideoConfigurationBuilder
         _pdfPath = "";
         _inputVideoPath = "";
         _defaultImagePath = "";
-        _imagePrefix = "jpg";
-        _imageFormat = "page";
+        _imagePrefix = "page";
+        _imageFormat = "jpg";
     }
 
     public FromVideoConfigurationBuilder WithOutputPath(string outputPath)
