@@ -60,7 +60,7 @@ var configurationBuilder = MusicSheetConfigurationBuilder
 var configuration = configurationBuilder.Build();
 
 var entrypoint = new Entrypoint(
-    new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger), logger),
+    new ImagemagickPdfConverter(new ImagemagickPdfConversionCommand(configuration, logger)),
     new FrameProcessor(new IntervalProcessor(), logger),
     new FfmpegVideoMaker(
         new List<ICommand>

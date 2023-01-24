@@ -8,16 +8,10 @@ public class FfmpegVideoMaker : IVideoMaker
     private readonly List<ICommand> _commands;
     private readonly IProgressNotification _progressNotification;
 
-    private void AssertFfpmegIsInstalled()
-    {
-        new FfmpegVersionCommand(_progressNotification).Do();
-    }
-
     public FfmpegVideoMaker(List<ICommand> commands, IProgressNotification progressNotification)
     {
         _commands = commands;
         _progressNotification = progressNotification;
-        AssertFfpmegIsInstalled();
     }
 
     public void MakeVideo(List<Frame> frames, MusicSheetVideoConfiguration configuration)

@@ -13,12 +13,6 @@ public abstract class ShellCommand : ICommand
         ProgressNotification = progressNotification;
     }
 
-    protected ShellCommand(IProgressNotification progressNotification)
-    {
-        Configuration = new MusicSheetVideoConfiguration("", "", "", "", "", "");
-        ProgressNotification = progressNotification;
-    }
-
     protected MusicSheetVideoConfiguration Configuration { get; }
     protected abstract string CommandName { get; }
     protected abstract string Arguments { get; }
