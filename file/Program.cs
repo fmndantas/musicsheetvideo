@@ -21,10 +21,10 @@ var parserResult = Parser.Default.ParseArguments<ParserOptions>(args).WithParsed
     mode = o.Mode;
 });
 
+if (parserResult.Errors.Any()) return;
+
 logger.NotifyProgress($"Running in {(debugMode ? "DEBUG" : "COMMON")} mode");
 logger.NotifyProgress($"Using \"{mode}\" mode");
-
-if (parserResult.Errors.Any()) return;
 
 if (!File.Exists(inputFilePath))
 {
