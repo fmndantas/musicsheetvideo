@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,36 +16,18 @@ namespace test.AcceptanceTests;
 [Category("acceptance")]
 public abstract class AcceptanceTestsBase
 {
-    private Frame _lastFrame;
-    protected readonly string BasePath;
+    protected const string BasePath = "/home/fernando/Documents/github/musicsheetvideo/test/AcceptanceTests/";
     protected readonly string DefaultImagePath;
     protected MusicSheetVideoConfiguration Configuration;
 
     protected AcceptanceTestsBase()
     {
-        _lastFrame = new Frame(new Interval(new Tick(0, 0, 0), new Tick(0, 0, 0)), 0);
-        Configuration = new MusicSheetVideoConfiguration("", "", "", "", "", "");
-        BasePath = AppDomain.CurrentDomain.BaseDirectory;
-        if (!BasePath.Contains("/bin"))
-        {
-            throw new Exception("Project directory could not be found. " +
-                                "A build path containing \"/bin/\" is necessary");
-        }
-
-        while (BasePath.Contains("/bin"))
-        {
-            var parentDir = Directory.GetParent(BasePath);
-            if (parentDir == null)
-            {
-                throw new Exception($"Directory \"{parentDir}\" doesn't exist");
-            }
-
-            BasePath = parentDir.FullName;
-        }
-
-        BasePath = Path.Combine(BasePath, "AcceptanceTests");
         DefaultImagePath = Path.Combine(BasePath, "Data/default-image.jpg");
     }
+
+    private IIntervalProcessor _intervalProcessor;
+    private MusicSheetVideo _app;
+    private Frame _lastFrame;
 
     protected void StartTest(
         MusicSheetVideoConfiguration configuration,
@@ -60,9 +41,8 @@ public abstract class AcceptanceTestsBase
         _lastFrame = frames.Last();
         Configuration = configuration;
         DeleteGeneratedFiles();
-        new MusicSheetVideo(
-            pdfConverter, frameProcessor, videoMaker, new NullProgressNotification()
-        ).MakeVideo(frames, configuration);
+        _app = new MusicSheetVideo(pdfConverter, frameProcessor, videoMaker, new NullProgressNotification());
+        _app.MakeVideo(frames, configuration);
         AssertImagesWereCreatedCorrectly();
         AssertFfmpegInputFileWasCreatedCorrectly();
         AssertSlideshowWasCorrectlyProduced();
