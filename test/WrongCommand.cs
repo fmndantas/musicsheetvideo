@@ -1,4 +1,3 @@
-using musicsheetvideo;
 using musicsheetvideo.Command;
 using NUnit.Framework;
 using test.Stubs;
@@ -6,10 +5,9 @@ using test.Stubs;
 namespace test;
 
 [TestFixture]
-public class WrongCommand : ShellCommand
+public class WrongCommand : ShellCommand<object>
 {
-    public WrongCommand() : base(new MusicSheetVideoConfiguration("", "", "", "", "", ""),
-        new NullProgressNotification())
+    public WrongCommand() : base(new object(), new NullProgressNotification())
     {
     }
 
