@@ -8,3 +8,5 @@ Using
 you will be able to create a video that shows the pages of your musicsheet in sync with the music you want to hear. 
 
 Look at this [example](https://youtu.be/Hf5nikZDXBg).
+
+## CLI use
