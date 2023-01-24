@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace test.Uteis;
+namespace test.Utils;
 
 public static class Generator
 {

@@ -8,7 +8,7 @@ using musicsheetvideo.Command.ImagemagickPdfConversionCommand;
 using musicsheetvideo.CustomException;
 using NUnit.Framework;
 using test.Stubs;
-using test.Uteis;
+using test.Utils;
 
 namespace test;
 
