@@ -27,17 +27,17 @@ public class BottomOverlay : AcceptanceTestsBase
         var pipeline = new FfmpegFromVideoPipelineMaker(configuration, Logger).MakePipeline();
         var frames = new List<Frame>
         {
-            new(new Interval(new(0, 0, 0), new Tick(0, 3, 651)), 1),
-            new(new Interval(new(0, 3, 651), new Tick(0, 9, 204)), 2),
-            new(new Interval(new(0, 9, 204), new(0, 12, 902)), 3),
-            new(new Interval(new(0, 12, 902), new(0, 18, 411)), 4),
-            new(new Interval(new(0, 18, 411), new(0, 22, 132)), 5),
-            new(new Interval(new(0, 22, 132), new(0, 27, 664)), 6),
-            new(new Interval(new(0, 27, 664), new(0, 31, 350)), 7),
-            new(new Interval(new(0, 31, 350), new(0, 35, 52)), 8),
-            new(new Interval(new(0, 35, 52), new(0, 38, 703)), 9),
-            new(new Interval(new(0, 38, 703), new(0, 42, 384)), 10),
-            new(new Interval(new(0, 42, 384), new(0, 45, 0)), 11),
+            new(new(new(0, 0, 0), new(0, 3, 651)), 1),
+            new(new(new(0, 3, 651), new(0, 9, 204)), 2),
+            new(new(new(0, 9, 204), new(0, 12, 902)), 3),
+            new(new(new(0, 12, 902), new(0, 18, 411)), 4),
+            new(new(new(0, 18, 411), new(0, 22, 132)), 5),
+            new(new(new(0, 22, 132), new(0, 27, 664)), 6),
+            new(new(new(0, 27, 664), new(0, 31, 350)), 7),
+            new(new(new(0, 31, 350), new(0, 35, 52)), 8),
+            new(new(new(0, 35, 52), new(0, 38, 703)), 9),
+            new(new(new(0, 38, 703), new(0, 42, 384)), 10),
+            new(new(new(0, 42, 384), new(0, 45, 0)), 11)
         };
         StartTest(
             configuration.Build(),

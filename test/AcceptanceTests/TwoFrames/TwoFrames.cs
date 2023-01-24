@@ -26,15 +26,8 @@ public class TwoFrames : AcceptanceTestsBase
             .WithDefaultImagePath(DefaultImagePath);
         var frames = new List<Frame>
         {
-            new(new(
-                    new Tick(0, 0, 0),
-                    new Tick(0, 5, 0)
-                ),
-                2),
-            new(new Interval(
-                    new Tick(0, 5, 0),
-                    new Tick(0, 10, 0)),
-                1)
+            new(new(new(0, 0, 0), new(0, 5, 0)), 2),
+            new(new(new(0, 5, 0), new(0, 10, 0)), 1)
         };
         StartTest(
             configuration.Build(),

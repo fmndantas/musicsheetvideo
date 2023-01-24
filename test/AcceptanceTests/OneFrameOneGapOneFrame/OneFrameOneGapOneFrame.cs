@@ -26,16 +26,8 @@ public class OneFrameOneGapOneFrame : AcceptanceTestsBase
             .WithDefaultImagePath(DefaultImagePath);
         var frames = new List<Frame>
         {
-            new(new(
-                    new Tick(0, 2, 0),
-                    new Tick(0, 3, 0)
-                ),
-                1),
-            new(new(
-                    new Tick(0, 4, 0),
-                    new Tick(0, 5, 0)
-                ),
-                2),
+            new(new(new(0, 2, 0), new(0, 3, 0)), 1),
+            new(new(new(0, 4, 0), new(0, 5, 0)), 2)
         };
         StartTest(
             configuration.Build(),

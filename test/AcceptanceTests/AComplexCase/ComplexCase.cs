@@ -26,18 +26,9 @@ public class ComplexCase : AcceptanceTestsBase
             .WithDefaultImagePath(DefaultImagePath);
         var frames = new List<Frame>
         {
-            new(new(
-                    new Tick(0, 0, 0),
-                    new Tick(0, 10, 0)),
-                1),
-            new(new Interval(
-                    new Tick(0, 10, 500),
-                    new Tick(0, 32, 3)),
-                2),
-            new(new Interval(
-                new Tick(0, 32, 4),
-                new Tick(0, 40, 0)
-            ), 3)
+            new(new(new(0, 0, 0), new(0, 10, 0)), 1),
+            new(new(new(0, 10, 500), new(0, 32, 3)), 2),
+            new(new(new(0, 32, 4), new(0, 40, 0)), 3)
         };
         StartTest(
             configuration.Build(),
